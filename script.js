@@ -476,6 +476,26 @@
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   });
 
+  /* ---------- Swipe the main window to move through time (touch screens) ----------
+     Swipe left = forward to the next stop, swipe right = back. Vertical scrolling still
+     works as normal; swipes that start on a sideways-scrolling row are left to that row. */
+  var mainWin = $('.main'), swipe = null;
+  mainWin.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) { swipe = null; return; }
+    var row = e.target.closest('.chips--hero');
+    if (row && row.scrollWidth > row.clientWidth) { swipe = null; return; }
+    var t = e.touches[0];
+    swipe = { x: t.clientX, y: t.clientY, t: Date.now() };
+  }, { passive: true });
+  mainWin.addEventListener('touchend', function (e) {
+    if (!swipe) return;
+    var t = e.changedTouches[0], dx = t.clientX - swipe.x, dy = t.clientY - swipe.y;
+    var quick = Date.now() - swipe.t < 800;
+    swipe = null;
+    if (quick && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
+  mainWin.addEventListener('touchcancel', function () { swipe = null; }, { passive: true });
+
   /* ---------- Mobile drawer ---------- */
   var stageHome = sidebar.parentNode;
   function placeSidebar() {

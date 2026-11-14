@@ -8,6 +8,10 @@
     - cases    → "Case studies" thumbnails (click to open)
   Scrolling back past a stop puts its items back.
 
+  type: 'major' = a job (gold dot, name always shown on the timeline)
+        'minor' = a key project (blue dot, name shown when you reach it).
+  Minor stops sit between the jobs either side. `yr` can be null if unknown.
+
   NOTE: the projects, clients, tools and cases below are PLACEHOLDERS taken from the
   resume. Replace them with the real lists for each part of the timeline.
 */
@@ -21,22 +25,21 @@ window.SITE = {
 
   stops: [
     {
-      yr: 2015, label: '2015',
-      when: '2015 to 2017', kind: 'Control room', short: 'Live sports',
+      type: 'major', yr: 2015, label: '2015',
+      when: '2015 to 2017', kind: 'Engineer & graphics designer', short: 'Broadcast Engineering',
       title: 'Giants, Sharks, Stanford',
-      body: 'Technical director, replay, graphics and video engineering for live sports. I learned what operators need when it all happens at once.',
+      body: 'Broadcast engineer and motion graphics designer for the SF Giants, San Jose Sharks and Stanford Athletics. I kept the control rooms, replay and video boards running, and created the motion graphics fans saw in the stands.',
       projects: [
-        { name: 'SF Giants video-board show', note: 'Technical Director at AT&T Park (SAMMCO) and video ops for the Giants' },
-        { name: 'Sharks & Barracuda games', note: 'Technical Director, Chyron graphics and EVS replay at SAP Center' },
-        { name: 'Stanford Athletics', note: 'Control room engineering at Stanford Stadium and Maples Pavilion' },
-        { name: 'Cisco TV', note: 'WebEx facilitator for live streaming sessions' }
+        { name: 'San Francisco Giants', note: 'Control-room engineering, ballpark signage systems and gameday motion graphics; Technical Director for the AT&T Park video-board show' },
+        { name: 'San Jose Sharks', note: 'Technical Director, Chyron graphics and EVS replay for Sharks and Barracuda games at SAP Center' },
+        { name: 'Stanford Athletics', note: 'Control room engineering at Stanford Stadium and Maples Pavilion, plus video-board content design and animation' }
       ],
       clients: [],
       tools: { interface: [], creative: ['Photoshop', 'After Effects', 'Premiere Pro'], systems: ['LSM / XT-VIA'] },
       cases: []
     },
     {
-      yr: 2017, label: '2017',
+      type: 'major', yr: 2017, label: '2017',
       when: '2017 to 2022', kind: 'EVS · Burbank', short: 'Solutions Architect',
       title: 'Solutions Architect',
       body: 'Shaped systems for Apple, Meta, Riot Games, NBC, ESPN and CBS, and built the Cerebrum interfaces behind every demo.',
@@ -45,7 +48,7 @@ window.SITE = {
         { name: 'Product demos', note: 'Cerebrum hardware and software interfaces for sales demos and internal training' },
         { name: 'Go-live & hand-over', note: 'Carried customers from install through to support' }
       ],
-      clients: ['NBC', 'Facebook', 'MLB Network', 'YES Network', 'Rogers Media', 'Dome Productions'],
+      clients: ['NBC', 'MLB Network', 'YES Network', 'Rogers Media', 'Dome Productions'],
       tools: { interface: ['Cerebrum Designer', 'Hardware panels'], creative: [], systems: ['Cerebrum', 'Visio', 'Microsoft D365', 'IP Director', 'Neuron'] },
       cases: [
         { title: 'Routing panel builder', tag: 'Visual', img: 'assets/img/panel-builder.jpg',
@@ -53,7 +56,18 @@ window.SITE = {
       ]
     },
     {
-      yr: 2022, label: '2022',
+      type: 'minor', yr: null, label: '', // PLACEHOLDER: add the year, e.g. yr: 2019, label: '2019'
+      when: 'Solutions Architect', kind: 'Key project', short: 'Meta (Facebook)',
+      title: 'Meta (Facebook)',
+      // PLACEHOLDER body/projects: replace with the real project story
+      body: 'Shaped the system architecture around Meta’s requirements, from design drawings to the Cerebrum interfaces behind it.',
+      projects: [],
+      clients: ['Facebook'],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'major', yr: 2022, label: '2022',
       when: '2022 to 2026', kind: 'EVS · Remote', short: 'Technical Architect',
       title: 'Technical Architect',
       body: 'Designing, coding and supporting operator interfaces used daily at 15+ live facilities, from routing panels to master control.',
@@ -72,7 +86,7 @@ window.SITE = {
       ]
     },
     {
-      yr: 2025, label: '2025',
+      type: 'minor', yr: 2025, label: '2025',
       when: '2025', kind: 'Certificate', short: 'Google UX',
       title: 'Google UX Design certificate',
       body: 'Putting formal UX method behind ten years of designing with operators at their desks.',
@@ -84,7 +98,7 @@ window.SITE = {
       cases: []
     },
     {
-      yr: 2026, label: '2026',
+      type: 'major', yr: 2026, label: '2026',
       when: '2026 to now', kind: 'EVS · Remote', short: 'Senior Tech Architect',
       title: 'Senior Technical Architect',
       // PLACEHOLDER body/projects: replace with the real story for this stop
@@ -95,7 +109,7 @@ window.SITE = {
       cases: []
     },
     {
-      yr: 2026, label: 'Now',
+      type: 'major', yr: 2026, label: 'Now',
       when: 'Now', kind: 'Looking for', short: 'UI / UX role',
       title: 'A UI / UX design role',
       body: 'Simple, clean interfaces anyone can pick up without training. Hybrid or remote from Millbrae, CA.',

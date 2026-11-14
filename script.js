@@ -33,22 +33,49 @@
   var sidebar = $('[data-sidebar]'), drawerBtn = $('[data-drawer-open]'), totalEl = $('[data-total]');
   var prevBtn = $('[data-step="-1"]'), nextBtn = $('[data-step="1"]');
 
-  function label(i) { return STOPS[i].label || String(STOPS[i].yr); }
-  function pct(y) { return y / LAST * 100; }
+  function isMajor(i) { return STOPS[i].type !== 'minor'; }
+  function label(i) { return STOPS[i].label || (STOPS[i].yr ? String(STOPS[i].yr) : ''); }
+
+  /* Where each stop sits on the line: jobs (major) are evenly spaced; key projects
+     (minor) are spread evenly between the jobs either side. Measured in "job gaps". */
+  var POS = [], majors = [];
+  STOPS.forEach(function (s, i) { if (isMajor(i)) majors.push(i); });
+  majors.forEach(function (mi, k) {
+    POS[mi] = k;
+    var next = majors[k + 1];
+    if (next === undefined) return;
+    for (var j = mi + 1; j < next; j++) POS[j] = k + (j - mi) / (next - mi);
+  });
+  var POS_MAX = Math.max(1, majors.length - 1);
+
+  // y = position in "stops" (0 … LAST), possibly fractional while moving between stops
+  function posOf(y) {
+    var i = Math.min(Math.floor(clamp(y, 0, LAST)), LAST - 1), f = clamp(y - i);
+    return POS[i] + (POS[i + 1] - POS[i]) * f;
+  }
+  function yOfPos(p) {
+    p = clamp(p, 0, POS_MAX);
+    for (var i = 0; i < LAST; i++) if (p <= POS[i + 1]) return i + (p - POS[i]) / (POS[i + 1] - POS[i]);
+    return LAST;
+  }
+  function pct(y) { return posOf(y) / POS_MAX * 100; }
   function nearest(y) { return Math.round(clamp(y, 0, LAST)); }
+  var YEARS = []; // years with gaps (unknown years) filled from the stop before
+  STOPS.forEach(function (s, i) { YEARS[i] = s.yr || YEARS[i - 1] || STOPS.find(function (t) { return t.yr; }).yr; });
   function yearAt(y) { // calendar year shown in the big number, interpolated between stops
     var i = Math.min(Math.floor(y), LAST - 1), f = clamp(y - i);
-    return STOPS[i].yr + (STOPS[i + 1].yr - STOPS[i].yr) * f;
+    return YEARS[i] + (YEARS[i + 1] - YEARS[i]) * f;
   }
 
   /* ---------- Timeline: milestone name above each dot, year below ---------- */
   var dots = [], yrs = [], names = [];
-  track.style.setProperty('--segs', LAST);
+  track.style.setProperty('--segs', POS_MAX);
   STOPS.forEach(function (s, i) {
-    var pos = pct(i) + '%', edge = i === 0 ? ' ms--first' : i === LAST ? ' ms--last' : '';
-    var m = el('span', 'ms' + edge, s.short); m.style.left = pos; stopsEl.appendChild(m); names.push(m);
-    var d = el('div', 'dot'); d.style.left = pos; stopsEl.appendChild(d); dots.push(d);
-    var l = el('span', 'yr' + edge, label(i)); l.style.left = pos; stopsEl.appendChild(l); yrs.push(l);
+    var pos = pct(i) + '%', major = isMajor(i);
+    var edge = i === 0 ? ' ms--first' : i === LAST ? ' ms--last' : '';
+    var m = el('span', major ? 'ms' + edge : 'ms ms--minor', s.short); m.style.left = pos; stopsEl.appendChild(m); names.push(m);
+    var d = el('div', 'dot ' + (major ? 'dot--major' : 'dot--minor')); d.style.left = pos; stopsEl.appendChild(d); dots.push(d);
+    var l = el('span', 'yr' + (major ? '' : ' yr--minor'), label(i)); l.style.left = pos; stopsEl.appendChild(l); yrs.push(l);
   });
 
   /* ---------- Collectable items (flattened, each tagged with the stop it belongs to) ---------- */
@@ -244,6 +271,7 @@
   function fillCard(i) {
     var s = STOPS[i];
     curMeta.textContent = s.when + ' · ' + s.kind;
+    card.classList.toggle('is-minor', !isMajor(i));
     curTitle.textContent = s.title;
     curBody.textContent = s.body;
     projList.textContent = '';
@@ -311,11 +339,12 @@
       yrs[i].classList.toggle('is-on', i === near);
       names[i].classList.toggle('is-on', i === near);
       names[i].classList.toggle('is-past', i < near);
+      names[i].classList.toggle('is-dim', !isMajor(near) && isMajor(i) && Math.abs(i - near) === 1);
     });
     handle.setAttribute('aria-valuemin', '0');
     handle.setAttribute('aria-valuemax', String(LAST));
     handle.setAttribute('aria-valuenow', String(near));
-    handle.setAttribute('aria-valuetext', label(near) + ': ' + STOPS[near].title);
+    handle.setAttribute('aria-valuetext', (label(near) ? label(near) + ': ' : '') + STOPS[near].title);
     prevBtn.disabled = near === 0;
     nextBtn.disabled = near === LAST;
   }
@@ -370,7 +399,7 @@
   });
   handle.addEventListener('pointermove', function (e) {
     if (!drag) return;
-    var y = clamp(drag.oy + (e.clientX - drag.sx) / drag.w * (Y1 - Y0), Y0, Y1);
+    var y = yOfPos(posOf(drag.oy) + (e.clientX - drag.sx) / drag.w * POS_MAX);
     window.scrollTo({ top: scrollForY(y), behavior: 'instant' });
   });
   function endDrag() {
@@ -384,7 +413,9 @@
   track.addEventListener('pointerdown', function (e) {
     if (handle.contains(e.target)) return;
     var r = track.getBoundingClientRect();
-    goToStop(nearest(Y0 + clamp((e.clientX - r.left) / r.width) * (Y1 - Y0)));
+    var p = clamp((e.clientX - r.left) / r.width) * POS_MAX, best = 0;
+    POS.forEach(function (q, i) { if (Math.abs(q - p) < Math.abs(POS[best] - p)) best = i; });
+    goToStop(best);
   });
   handle.addEventListener('keydown', function (e) {
     var k = e.key;

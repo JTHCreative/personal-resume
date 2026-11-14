@@ -2,7 +2,9 @@
   'use strict';
 
   var SITE = window.SITE, STOPS = SITE.stops, N = STOPS.length, LAST = N - 1;
-  var Y0 = STOPS[0].yr, Y1 = STOPS[LAST].yr;
+  // Positions on the timeline are measured in "stops" (0 = first stop, LAST = Now),
+  // so stops are evenly spaced however many years apart they are.
+  var Y0 = 0, Y1 = LAST;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var mobileMq = window.matchMedia('(max-width: 900px)');
 
@@ -32,18 +34,18 @@
   var prevBtn = $('[data-step="-1"]'), nextBtn = $('[data-step="1"]');
 
   function label(i) { return STOPS[i].label || String(STOPS[i].yr); }
-  function pct(y) { return (y - Y0) / (Y1 - Y0) * 100; }
-  function nearest(y) {
-    var b = 0;
-    STOPS.forEach(function (s, i) { if (Math.abs(s.yr - y) < Math.abs(STOPS[b].yr - y)) b = i; });
-    return b;
+  function pct(y) { return y / LAST * 100; }
+  function nearest(y) { return Math.round(clamp(y, 0, LAST)); }
+  function yearAt(y) { // calendar year shown in the big number, interpolated between stops
+    var i = Math.min(Math.floor(y), LAST - 1), f = clamp(y - i);
+    return STOPS[i].yr + (STOPS[i + 1].yr - STOPS[i].yr) * f;
   }
 
   /* ---------- Timeline dots, labels and Collections badges ---------- */
   var dots = [], yrs = [], badges = [];
   STOPS.forEach(function (s, i) {
-    var d = el('div', 'dot'); d.style.left = pct(s.yr) + '%'; stopsEl.appendChild(d); dots.push(d);
-    var l = el('span', 'yr', label(i)); l.dataset.i = i; l.style.left = pct(s.yr) + '%'; stopsEl.appendChild(l); yrs.push(l);
+    var d = el('div', 'dot'); d.style.left = pct(i) + '%'; stopsEl.appendChild(d); dots.push(d);
+    var l = el('span', 'yr', label(i)); l.dataset.i = i; l.style.left = pct(i) + '%'; stopsEl.appendChild(l); yrs.push(l);
     var b = el('button', 'badge'); b.type = 'button';
     b.appendChild(el('span', 'badge__yr', label(i))); b.appendChild(el('span', 'badge__t'));
     b.addEventListener('click', function () { goToStop(i); });
@@ -173,16 +175,12 @@
   function yFromT(t) {
     var i = Math.min(Math.floor(t), N - 2), f = t - i;
     var g = clamp((f - PAUSE) / (1 - 2 * PAUSE));
-    return STOPS[i].yr + (STOPS[i + 1].yr - STOPS[i].yr) * g;
+    return i + g;
   }
   function scrollForY(y) {
-    for (var i = 0; i < N - 1; i++) {
-      var a = STOPS[i].yr, b = STOPS[i + 1].yr;
-      if (y <= b || i === N - 2) {
-        var g = clamp((y - a) / (b - a)), f = g <= 0 ? 0 : g >= 1 ? 1 : PAUSE + g * (1 - 2 * PAUSE);
-        return L.top + L.intro + (i + f) * L.seg;
-      }
-    }
+    var i = Math.min(Math.floor(y), N - 2), g = clamp(y - i);
+    var f = g <= 0 ? 0 : g >= 1 ? 1 : PAUSE + g * (1 - 2 * PAUSE);
+    return L.top + L.intro + (i + f) * L.seg;
   }
   function scrollForStop(i) { return L.top + L.intro + i * L.seg; }
 
@@ -217,9 +215,9 @@
   function slideDistance() { return window.innerWidth <= 720 ? 36 : 64; }
   // Signed distance from milestone i: ±1 at the midpoint to the neighbour. Positive = handle to the right.
   function offsetFrom(i, y) {
-    var s = STOPS[i].yr, delta = y - s, nb = delta >= 0 ? STOPS[i + 1] : STOPS[i - 1];
+    var delta = y - i, nb = delta >= 0 ? STOPS[i + 1] : STOPS[i - 1];
     if (!nb) return 0;
-    return clamp(delta / (Math.abs(nb.yr - s) / 2), -1, 1);
+    return clamp(delta / 0.5, -1, 1);
   }
 
   /* ---------- Render ---------- */
@@ -256,14 +254,14 @@
     var d = offsetFrom(near, y);
     card.style.opacity = String(1 - Math.pow(Math.abs(d), 1.6));
     card.style.transform = reduceMotion ? 'none' : 'translateX(' + (d * slideDistance()).toFixed(1) + 'px)';
-    yearEl.textContent = near === LAST ? 'Now' : String(Math.round(y));
+    yearEl.textContent = near === LAST ? 'Now' : String(Math.round(yearAt(y)));
 
     // What's been collected so far (nothing until the intro is done)
     var k = q < 0.85 ? -1 : near;
     if (k !== state.k) collect(k);
 
     STOPS.forEach(function (st, i) {
-      dots[i].classList.toggle('is-past', st.yr <= y + 0.001);
+      dots[i].classList.toggle('is-past', i <= y + 0.001);
       yrs[i].classList.toggle('is-on', i === near);
     });
     handle.setAttribute('aria-valuemin', '0');

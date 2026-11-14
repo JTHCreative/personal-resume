@@ -158,8 +158,6 @@ img { max-width: 100%; display: block; }
 @media (max-width: 480px) {
   .brand__role { display: none; }
   .yr { font-size: 10px; width: 32px; margin-left: -16px; }
-  .yr[data-i="3"] { margin-left: -26px; }
-  .yr[data-i="4"] { margin-left: -6px; }
 }
 
 /* ===== Story (scroll-driven) ===== */

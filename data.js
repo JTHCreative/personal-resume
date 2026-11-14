@@ -54,8 +54,8 @@ window.SITE = {
     },
     {
       yr: 2022, label: '2022',
-      when: '2022 to now', kind: 'EVS · Remote', short: 'Senior Tech Architect',
-      title: 'Senior Technical Architect',
+      when: '2022 to 2026', kind: 'EVS · Remote', short: 'Technical Architect',
+      title: 'Technical Architect',
       body: 'Designing, coding and supporting operator interfaces used daily at 15+ live facilities, from routing panels to master control.',
       projects: [
         { name: 'Operator interfaces', note: 'From single-operator routing panels to full master-control configuration apps' },
@@ -81,6 +81,17 @@ window.SITE = {
       ],
       clients: [],
       tools: { interface: [], creative: ['Figma'], systems: [] },
+      cases: []
+    },
+    {
+      yr: 2026, label: '2026',
+      when: '2026 to now', kind: 'EVS · Remote', short: 'Senior Tech Architect',
+      title: 'Senior Technical Architect',
+      // PLACEHOLDER body/projects: replace with the real story for this stop
+      body: 'Promoted to Senior Technical Architect, leading the design, build and support of operator interfaces for live broadcast facilities.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
       cases: []
     },
     {

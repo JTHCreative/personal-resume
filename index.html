@@ -93,12 +93,13 @@
               <div class="bigyear" aria-hidden="true" data-year></div>
             </div>
 
-            <section class="collections" data-collections aria-label="Collections">
+            <section class="collections" data-collections aria-labelledby="iip-title">
               <div class="panel__head">
-                <h3 class="label">Collections</h3>
-                <span class="meta" data-got></span>
+                <h3 class="label" id="iip-title">Interfaces in production</h3>
+                <span class="count" data-count="clients"></span>
               </div>
-              <div class="badges" data-badges></div>
+              <ul class="chips chips--hero" data-list="clients"></ul>
+              <p class="empty" data-empty="clients">Scroll on to collect the facilities running my interfaces.</p>
             </section>
           </section>
 
@@ -107,15 +108,6 @@
               <h2 class="h-card">Collected</h2>
               <button class="sidebar__close" type="button" data-drawer-close aria-label="Close collection">✕</button>
             </div>
-
-            <section class="panel">
-              <div class="panel__head">
-                <h3 class="label">Interfaces in production</h3>
-                <span class="count" data-count="clients"></span>
-              </div>
-              <ul class="chips" data-list="clients"></ul>
-              <p class="empty" data-empty="clients">Scroll on to collect the facilities running my interfaces.</p>
-            </section>
 
             <section class="panel">
               <div class="panel__head">

@@ -29,7 +29,7 @@
   var track = $('[data-track]'), fill = $('[data-fill]'), handle = $('[data-handle]'), stopsEl = $('[data-stops]');
   var card = $('[data-card]'), curMeta = $('[data-cur-meta]'), curTitle = $('[data-cur-title]'), curBody = $('[data-cur-body]');
   var projWrap = $('[data-projects-wrap]'), projList = $('[data-projects]'), cta = $('[data-cta]');
-  var yearEl = $('[data-year]'), collections = $('[data-collections]'), gotEl = $('[data-got]'), badgesEl = $('[data-badges]');
+  var yearEl = $('[data-year]'), collections = $('[data-collections]');
   var sidebar = $('[data-sidebar]'), drawerBtn = $('[data-drawer-open]'), totalEl = $('[data-total]');
   var prevBtn = $('[data-step="-1"]'), nextBtn = $('[data-step="1"]');
 
@@ -41,15 +41,14 @@
     return STOPS[i].yr + (STOPS[i + 1].yr - STOPS[i].yr) * f;
   }
 
-  /* ---------- Timeline dots, labels and Collections badges ---------- */
-  var dots = [], yrs = [], badges = [];
+  /* ---------- Timeline: milestone name above each dot, year below ---------- */
+  var dots = [], yrs = [], names = [];
+  track.style.setProperty('--segs', LAST);
   STOPS.forEach(function (s, i) {
-    var d = el('div', 'dot'); d.style.left = pct(i) + '%'; stopsEl.appendChild(d); dots.push(d);
-    var l = el('span', 'yr', label(i)); l.dataset.i = i; l.style.left = pct(i) + '%'; stopsEl.appendChild(l); yrs.push(l);
-    var b = el('button', 'badge'); b.type = 'button';
-    b.appendChild(el('span', 'badge__yr', label(i))); b.appendChild(el('span', 'badge__t'));
-    b.addEventListener('click', function () { goToStop(i); });
-    badgesEl.appendChild(b); badges.push(b);
+    var pos = pct(i) + '%', edge = i === 0 ? ' ms--first' : i === LAST ? ' ms--last' : '';
+    var m = el('span', 'ms' + edge, s.short); m.style.left = pos; stopsEl.appendChild(m); names.push(m);
+    var d = el('div', 'dot'); d.style.left = pos; stopsEl.appendChild(d); dots.push(d);
+    var l = el('span', 'yr' + edge, label(i)); l.style.left = pos; stopsEl.appendChild(l); yrs.push(l);
   });
 
   /* ---------- Collectable items (flattened, each tagged with the stop it belongs to) ---------- */
@@ -263,6 +262,8 @@
     STOPS.forEach(function (st, i) {
       dots[i].classList.toggle('is-past', i <= y + 0.001);
       yrs[i].classList.toggle('is-on', i === near);
+      names[i].classList.toggle('is-on', i === near);
+      names[i].classList.toggle('is-past', i < near);
     });
     handle.setAttribute('aria-valuemin', '0');
     handle.setAttribute('aria-valuemax', String(LAST));
@@ -283,24 +284,21 @@
     $('[data-count="cases"]').textContent = nCases + ' / ' + CASES.length;
     $('[data-empty="clients"]').hidden = nClients > 0;
 
-    var got = k + 1;
-    gotEl.textContent = got + ' of ' + N + ' milestones';
-    badges.forEach(function (b, i) {
-      var have = i <= k;
-      b.classList.toggle('is-have', have);
-      b.querySelector('.badge__t').textContent = have ? STOPS[i].short : 'Not yet';
-      b.setAttribute('aria-label', label(i) + ': ' + (have ? STOPS[i].short : 'not yet reached') + '. Go to this milestone.');
-    });
-
-    // Desktop: scroll the sidebar so the newest pick-up is visible (case studies sit at the bottom)
-    if (forward && added.length && !mobileMq.matches) {
-      var low = added.reduce(function (a, b) { return b.offsetTop > a.offsetTop ? b : a; });
+    // Bring the newest pick-ups into view
+    var inSide = added.filter(function (n) { return sidebar.contains(n); });
+    var newClients = added.filter(function (n) { return lists.clients.el.contains(n); });
+    if (forward && newClients.length && lists.clients.el.scrollWidth > lists.clients.el.clientWidth) {
+      lists.clients.el.scrollTo({ left: lists.clients.el.scrollWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+    // Desktop: scroll the sidebar so the newest tool / case study is visible
+    if (forward && inSide.length && !mobileMq.matches) {
+      var low = inSide.reduce(function (a, b) { return b.offsetTop > a.offsetTop ? b : a; });
       var sTop = sidebar.getBoundingClientRect().top, r = low.getBoundingClientRect();
       var over = r.bottom - (sTop + sidebar.clientHeight) + 16;
       if (over > 0) sidebar.scrollTop += over;
     }
 
-    var total = nClients + nTools + nCases;
+    var total = nTools + nCases; // what's in the sidebar / mobile drawer
     if (total > state.total) {
       drawerBtn.classList.remove('is-pulse'); void drawerBtn.offsetWidth; drawerBtn.classList.add('is-pulse');
     }

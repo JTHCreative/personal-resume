@@ -24,5 +24,10 @@ The timeline milestones live in the `STOPS` array at the top of `script.js`.
 
 ## Publish with GitHub Pages
 
-Repository **Settings → Pages → Build and deployment**: choose *Deploy from a branch*,
-pick the branch and `/ (root)`, then save.
+Deployment is automated by `.github/workflows/deploy.yml`: every push to `main`
+publishes the site.
+
+One-time setup: repository **Settings → Pages → Build and deployment → Source**,
+choose **GitHub Actions**.
+
+You can also redeploy by hand from the **Actions** tab → *Deploy to GitHub Pages* → **Run workflow**.

@@ -56,8 +56,8 @@ window.SITE = {
       ]
     },
     {
-      type: 'minor', yr: null, label: '', // PLACEHOLDER: add the year, e.g. yr: 2019, label: '2019'
-      when: 'Solutions Architect', kind: 'Key project', short: 'Meta (Facebook)',
+      type: 'minor', yr: 2018, label: '2018',
+      when: '2018', kind: 'Key project', short: 'Meta (Facebook)',
       title: 'Meta (Facebook)',
       // PLACEHOLDER body/projects: replace with the real project story
       body: 'Shaped the system architecture around Meta’s requirements, from design drawings to the Cerebrum interfaces behind it.',
@@ -77,10 +77,11 @@ window.SITE = {
       cases: []
     },
     {
-      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
-      when: 'Solutions Architect', kind: 'Key project', short: 'Project 3',
-      title: 'Key project (details to come)',
-      body: 'Details for this project are on the way.',
+      type: 'minor', yr: 2021, label: '2021',
+      when: '2021', kind: 'Key project', short: 'Riot Games',
+      title: 'Riot Games',
+      // PLACEHOLDER body: replace with what the project was
+      body: 'Shaped the system architecture around Riot Games’ requirements, from design drawings to the Cerebrum interfaces behind it.',
       projects: [],
       clients: [],
       tools: { interface: [], creative: [], systems: [] },

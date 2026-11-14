@@ -46,7 +46,7 @@
   majors.forEach(function (mi, k) {
     var next = majors[k + 1];
     if (next === undefined) return;
-    var span = Math.max(next - mi, MIN_SPAN);
+    var span = STOPS[mi].span || Math.max(next - mi, MIN_SPAN); // a job can set its own stretch length
     for (var j = mi + 1; j <= next; j++) POS[j] = POS[mi] + span * (j - mi) / (next - mi);
     for (j = mi + 1; j < next; j++) { PREV_MAJ[j] = mi; NEXT_MAJ[j] = next; }
   });
@@ -78,8 +78,9 @@
      Widths are a share of the line, so they scale with the screen. */
   function nameWidth(k) {
     var mi = majors[k], prev = majors[k - 1], next = majors[k + 1];
-    var gL = prev === undefined ? Infinity : POS[mi] - POS[prev];
-    var gR = next === undefined ? Infinity : POS[next] - POS[mi];
+    // Names at either end can shift outwards (over the arrow buttons), so their neighbours may use more of that stretch
+    var gL = prev === undefined ? Infinity : (POS[mi] - POS[prev]) * (k - 1 === 0 ? 2 : 1);
+    var gR = next === undefined ? Infinity : (POS[next] - POS[mi]) * (k + 1 === majors.length - 1 ? 2 : 1);
     return Math.min(gL, gR) / POS_MAX * 100;
   }
   STOPS.forEach(function (s, i) {
@@ -91,6 +92,25 @@
     var d = el('div', 'dot ' + (major ? 'dot--major' : 'dot--minor')); d.style.left = pos; stopsEl.appendChild(d); dots.push(d);
     var l = el('span', 'yr' + (major ? '' : ' yr--minor'), label(i)); l.style.left = pos; stopsEl.appendChild(l); yrs.push(l);
   });
+
+  /* If two job names would touch, nudge them apart: the end names move outwards
+     (over the arrow buttons), others split the difference. Runs on load and resize. */
+  function textBox(node) { var r = document.createRange(); r.selectNodeContents(node); return r.getBoundingClientRect(); }
+  function fitNames() {
+    var labels = majors.map(function (mi) { return names[mi]; });
+    var nudge = labels.map(function () { return 0; });
+    labels.forEach(function (n) { n.style.setProperty('--nudge', '0px'); });
+    if (window.matchMedia('(max-width: 720px)').matches) return; // phones show one name at a time
+    for (var k = 0; k < labels.length - 1; k++) {
+      var a = textBox(labels[k]), b = textBox(labels[k + 1]);
+      var over = (a.right + nudge[k]) + 10 - (b.left + nudge[k + 1]);
+      if (over <= 0) continue;
+      if (k === 0) nudge[k] -= over;
+      else if (k + 1 === labels.length - 1) nudge[k + 1] += over;
+      else { nudge[k] -= over / 2; nudge[k + 1] += over / 2; }
+    }
+    labels.forEach(function (n, k) { n.style.setProperty('--nudge', nudge[k].toFixed(1) + 'px'); });
+  }
 
   /* ---------- Collectable items (flattened, each tagged with the stop it belongs to) ---------- */
   function norm(x) { return typeof x === 'string' ? { name: x } : x; }
@@ -474,9 +494,11 @@
   /* ---------- Start ---------- */
   placeSidebar();
   layout(true);
+  fitNames();
   fillCard(0);
   collect(-1);
   frame();
-  window.addEventListener('load', function () { layout(true); frame(); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(true); frame(); }); // text sizes change once web fonts load
+  window.addEventListener('load', function () { layout(true); fitNames(); frame(); });
+  window.addEventListener('resize', fitNames);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(true); fitNames(); frame(); }); // text sizes change once web fonts load
 })();

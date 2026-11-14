@@ -29,7 +29,8 @@ window.SITE = {
   stops: [
     {
       type: 'major', yr: 2015, label: '2015',
-      when: '2015 to 2017', kind: 'Engineer & graphics designer', short: 'Broadcast Engineering',
+      span: 1.75, // length of the 2015–2017 stretch on the timeline (30% shorter than the default 2.5)
+      when: '2015 to 2017', kind: 'Engineer & graphics designer', short: 'Broadcast\nEngineering', // \n = line break
       title: 'Giants, Sharks, Stanford',
       body: 'Broadcast engineer and motion graphics designer for the SF Giants, San Jose Sharks and Stanford Athletics. I kept the control rooms, replay and video boards running, and created the motion graphics fans saw in the stands.',
       projects: [

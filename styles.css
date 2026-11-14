@@ -166,7 +166,8 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
 }
 .ms.ms--minor.is-on { opacity: 1; transform: translate(-50%, 0); }
-.yr--minor { color: var(--accent); opacity: .7; }
+.yr--minor { color: var(--link); opacity: 0; transition: opacity .2s; } /* key project years show only when reached */
+.yr--minor.is-on { opacity: 1; }
 .yr--minor:empty { display: none; }
 .ms.ms--r { transform: translateX(-6px); text-align: left; }                   /* reads rightwards from its dot */
 .ms.ms--l { transform: translateX(calc(-100% + 6px)); text-align: right; }      /* reads leftwards */

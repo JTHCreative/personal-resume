@@ -48,7 +48,7 @@ window.SITE = {
         { name: 'Product demos', note: 'Cerebrum hardware and software interfaces for sales demos and internal training' },
         { name: 'Go-live & hand-over', note: 'Carried customers from install through to support' }
       ],
-      clients: ['NBC', 'MLB Network', 'YES Network', 'Rogers Media', 'Dome Productions'],
+      clients: ['NBC', 'MLB Network', 'YES Network', 'Dome Productions'],
       tools: { interface: ['Cerebrum Designer', 'Hardware panels'], creative: [], systems: ['Cerebrum', 'Visio', 'Microsoft D365', 'IP Director', 'Neuron'] },
       cases: [
         { title: 'Routing panel builder', tag: 'Visual', img: 'assets/img/panel-builder.jpg',
@@ -96,7 +96,7 @@ window.SITE = {
         { name: 'Workflow design', note: 'On-site consultation, panel design in Cerebrum Designer, hand-off, training and support' },
         { name: 'Training & documentation', note: 'Advanced Cerebrum training and internal tools from pre-sales to support' }
       ],
-      clients: ['FOX World Cup', 'MLB', 'Scripps', 'Gravity Media', 'LMG', 'Monumental', 'Bell Centre', 'Kraft Sports', 'CA Assembly'],
+      clients: ['FOX World Cup', 'MLB', 'LMG', 'Monumental', 'Bell Centre', 'CA Assembly'],
       tools: { interface: ['Panel prototyping', 'Workflow mapping'], creative: [], systems: ['Git', 'Bitbucket', 'Jira'] },
       cases: [
         { title: 'Proc Control', tag: 'Modular', img: 'assets/img/proc-control.jpg',
@@ -104,6 +104,39 @@ window.SITE = {
         { title: 'System configuration guide', tag: 'Human-centred', img: 'assets/img/config-tool.jpg',
           blurb: 'A configuration tool that doubles as a helper, pointing the user in the right direction and offering a hand through each step.' }
       ]
+    },
+    {
+      type: 'minor', yr: 2022, label: '2022',
+      when: '2022', kind: 'Key project', short: 'Gravity Media',
+      title: 'Gravity Media',
+      // PLACEHOLDER body: replace with what the project was
+      body: 'Operator interfaces designed, deployed and supported for Gravity Media.',
+      projects: [],
+      clients: ['Gravity Media'],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: 2023, label: '2023',
+      when: '2023', kind: 'Key project', short: 'Kraft Sports',
+      title: 'Kraft Sports',
+      // PLACEHOLDER body: replace with what the project was
+      body: 'Operator interfaces designed, deployed and supported for Kraft Sports.',
+      projects: [],
+      clients: ['Kraft Sports'],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: 2024, label: '2024',
+      when: '2024', kind: 'Key project', short: 'Scripps',
+      title: 'Scripps',
+      // PLACEHOLDER body: replace with what the project was
+      body: 'Operator interfaces designed, deployed and supported for Scripps.',
+      projects: [],
+      clients: ['Scripps'],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
     },
     {
       type: 'minor', yr: null, label: '', // PLACEHOLDER key project
@@ -126,36 +159,6 @@ window.SITE = {
       cases: []
     },
     {
-      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
-      when: 'Technical Architect', kind: 'Key project', short: 'Project 6',
-      title: 'Key project (details to come)',
-      body: 'Details for this project are on the way.',
-      projects: [],
-      clients: [],
-      tools: { interface: [], creative: [], systems: [] },
-      cases: []
-    },
-    {
-      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
-      when: 'Technical Architect', kind: 'Key project', short: 'Project 7',
-      title: 'Key project (details to come)',
-      body: 'Details for this project are on the way.',
-      projects: [],
-      clients: [],
-      tools: { interface: [], creative: [], systems: [] },
-      cases: []
-    },
-    {
-      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
-      when: 'Technical Architect', kind: 'Key project', short: 'Project 8',
-      title: 'Key project (details to come)',
-      body: 'Details for this project are on the way.',
-      projects: [],
-      clients: [],
-      tools: { interface: [], creative: [], systems: [] },
-      cases: []
-    },
-    {
       type: 'minor', yr: 2025, label: '2025',
       when: '2025', kind: 'Certificate', short: 'Google UX',
       title: 'Google UX Design certificate',
@@ -168,9 +171,10 @@ window.SITE = {
       cases: []
     },
     {
-      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
-      when: 'Technical Architect', kind: 'Key project', short: 'Project 9',
-      title: 'Key project (details to come)',
+      type: 'minor', yr: 2026, label: '2026',
+      when: '2026', kind: 'Key project', short: 'UI Packages',
+      title: 'UI Packages',
+      // PLACEHOLDER body: replace with what the project was
       body: 'Details for this project are on the way.',
       projects: [],
       clients: [],
@@ -185,6 +189,17 @@ window.SITE = {
       body: 'Promoted to Senior Technical Architect, leading the design, build and support of operator interfaces for live broadcast facilities.',
       projects: [],
       clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: 2026, label: '2026',
+      when: '2026', kind: 'Key project', short: 'Rogers Media',
+      title: 'Rogers Media',
+      // PLACEHOLDER body: replace with what the project was
+      body: 'Operator interfaces designed, deployed and supported for Rogers Media.',
+      projects: [],
+      clients: ['Rogers Media'],
       tools: { interface: [], creative: [], systems: [] },
       cases: []
     },

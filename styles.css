@@ -274,7 +274,7 @@ img { max-width: 100%; display: block; }
 .main__top { flex: 1; display: flex; gap: 32px; min-height: 0; }
 
 .milestone {
-  flex: 0 1 720px; align-self: flex-start; max-height: 100%; overflow: hidden;
+  flex: 0 1 720px; align-self: stretch; max-height: 100%; overflow: hidden; /* always full height: a big card to grab, even with little text */
   padding: 32px 36px; background: var(--card); border-radius: var(--r-lg);
   display: flex; flex-direction: column; gap: 10px;
   will-change: transform, opacity;

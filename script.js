@@ -36,17 +36,21 @@
   function isMajor(i) { return STOPS[i].type !== 'minor'; }
   function label(i) { return STOPS[i].label || (STOPS[i].yr ? String(STOPS[i].yr) : ''); }
 
-  /* Where each stop sits on the line: jobs (major) are evenly spaced; key projects
-     (minor) are spread evenly between the jobs either side. Measured in "job gaps". */
-  var POS = [], majors = [];
+  /* Where each stop sits on the line. Each job's stretch grows with the number of key
+     projects in it (one unit per step), but never shorter than MIN_SPAN so job names
+     still fit. Key projects are spread evenly within their stretch. */
+  var MIN_SPAN = 2.5;
+  var POS = [], majors = [], PREV_MAJ = [], NEXT_MAJ = [];
   STOPS.forEach(function (s, i) { if (isMajor(i)) majors.push(i); });
+  POS[majors[0]] = 0;
   majors.forEach(function (mi, k) {
-    POS[mi] = k;
     var next = majors[k + 1];
     if (next === undefined) return;
-    for (var j = mi + 1; j < next; j++) POS[j] = k + (j - mi) / (next - mi);
+    var span = Math.max(next - mi, MIN_SPAN);
+    for (var j = mi + 1; j <= next; j++) POS[j] = POS[mi] + span * (j - mi) / (next - mi);
+    for (j = mi + 1; j < next; j++) { PREV_MAJ[j] = mi; NEXT_MAJ[j] = next; }
   });
-  var POS_MAX = Math.max(1, majors.length - 1);
+  var POS_MAX = Math.max(1, POS[majors[majors.length - 1]]);
 
   // y = position in "stops" (0 … LAST), possibly fractional while moving between stops
   function posOf(y) {
@@ -69,11 +73,26 @@
 
   /* ---------- Timeline: milestone name above each dot, year below ---------- */
   var dots = [], yrs = [], names = [];
-  track.style.setProperty('--segs', POS_MAX);
+  /* Job names lean into whichever side has more room; two names leaning into the same
+     stretch share it. Widths are a share of the line, so they scale with the screen. */
+  var DIR = {};
+  majors.forEach(function (mi, k) {
+    if (k === 0) DIR[mi] = 'r';
+    else if (k === majors.length - 1) DIR[mi] = 'l';
+    else DIR[mi] = (POS[majors[k + 1]] - POS[mi]) >= (POS[mi] - POS[majors[k - 1]]) ? 'r' : 'l';
+  });
+  function nameWidth(k) {
+    var mi = majors[k], nb = DIR[mi] === 'r' ? majors[k + 1] : majors[k - 1];
+    if (nb === undefined) return 10;
+    var gap = Math.abs(POS[nb] - POS[mi]);
+    var shared = DIR[mi] === 'r' ? DIR[nb] === 'l' : DIR[nb] === 'r';
+    return (shared ? gap / 2 : gap) / POS_MAX * 100;
+  }
   STOPS.forEach(function (s, i) {
     var pos = pct(i) + '%', major = isMajor(i);
-    var edge = i === 0 ? ' ms--first' : i === LAST ? ' ms--last' : '';
-    var m = el('span', major ? 'ms' + edge : 'ms ms--minor', s.short); m.style.left = pos; stopsEl.appendChild(m); names.push(m);
+    var m = el('span', major ? 'ms ms--' + DIR[i] : 'ms ms--minor', s.short); m.style.left = pos;
+    if (major) m.style.width = 'calc(' + nameWidth(majors.indexOf(i)).toFixed(3) + '% - 10px)';
+    stopsEl.appendChild(m); names.push(m);
     var d = el('div', 'dot ' + (major ? 'dot--major' : 'dot--minor')); d.style.left = pos; stopsEl.appendChild(d); dots.push(d);
     var l = el('span', 'yr' + (major ? '' : ' yr--minor'), label(i)); l.style.left = pos; stopsEl.appendChild(l); yrs.push(l);
   });
@@ -236,7 +255,7 @@
     if (!force && w === L.w && Math.abs(vh - L.vh) < 120) return;
     L.vh = vh; L.w = w;
     L.intro = Math.round(vh * 0.9);
-    L.seg = Math.round(vh * 0.85);
+    L.seg = Math.round(vh * 0.7);
     L.length = L.intro + (N - 1) * L.seg + Math.round(vh * 0.4);
     story.style.height = (vh + L.length) + 'px';
     L.top = story.offsetTop;
@@ -339,7 +358,7 @@
       yrs[i].classList.toggle('is-on', i === near);
       names[i].classList.toggle('is-on', i === near);
       names[i].classList.toggle('is-past', i < near);
-      names[i].classList.toggle('is-dim', !isMajor(near) && isMajor(i) && Math.abs(i - near) === 1);
+      names[i].classList.toggle('is-dim', !isMajor(near) && (i === PREV_MAJ[near] || i === NEXT_MAJ[near]));
     });
     handle.setAttribute('aria-valuemin', '0');
     handle.setAttribute('aria-valuemax', String(LAST));

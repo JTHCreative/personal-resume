@@ -67,6 +67,26 @@ window.SITE = {
       cases: []
     },
     {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Solutions Architect', kind: 'Key project', short: 'Project 2',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Solutions Architect', kind: 'Key project', short: 'Project 3',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
       type: 'major', yr: 2022, label: '2022',
       when: '2022 to 2026', kind: 'EVS · Remote', short: 'Technical Architect',
       title: 'Technical Architect',
@@ -86,6 +106,56 @@ window.SITE = {
       ]
     },
     {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Technical Architect', kind: 'Key project', short: 'Project 4',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Technical Architect', kind: 'Key project', short: 'Project 5',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Technical Architect', kind: 'Key project', short: 'Project 6',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Technical Architect', kind: 'Key project', short: 'Project 7',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Technical Architect', kind: 'Key project', short: 'Project 8',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
+      cases: []
+    },
+    {
       type: 'minor', yr: 2025, label: '2025',
       when: '2025', kind: 'Certificate', short: 'Google UX',
       title: 'Google UX Design certificate',
@@ -95,6 +165,16 @@ window.SITE = {
       ],
       clients: [],
       tools: { interface: [], creative: ['Figma'], systems: [] },
+      cases: []
+    },
+    {
+      type: 'minor', yr: null, label: '', // PLACEHOLDER key project
+      when: 'Technical Architect', kind: 'Key project', short: 'Project 9',
+      title: 'Key project (details to come)',
+      body: 'Details for this project are on the way.',
+      projects: [],
+      clients: [],
+      tools: { interface: [], creative: [], systems: [] },
       cases: []
     },
     {

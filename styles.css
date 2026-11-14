@@ -146,7 +146,7 @@ img { max-width: 100%; display: block; }
 .yr.is-on { color: var(--fg); }
 /* Milestone names above the dots: each gets one segment's width and wraps to two lines if needed */
 .ms {
-  position: absolute; bottom: calc(100% - 12px); width: calc(100% / var(--segs, 5) - 10px);
+  position: absolute; bottom: calc(100% - 12px); /* width set per name in script.js */
   transform: translateX(-50%); text-align: center;
   font-family: var(--f-ui); font-size: 12px; line-height: 14px; color: var(--dot-off);
   transition: color .2s;
@@ -168,8 +168,8 @@ img { max-width: 100%; display: block; }
 .ms.ms--minor.is-on { opacity: 1; transform: translate(-50%, 0); }
 .yr--minor { color: var(--accent); opacity: .7; }
 .yr--minor:empty { display: none; }
-.ms.ms--first { width: calc(100% / var(--segs, 5) * .75); transform: translateX(-6px); text-align: left; }
-.ms.ms--last  { width: calc(100% / var(--segs, 5) * .75); transform: translateX(calc(-100% + 6px)); text-align: right; }
+.ms.ms--r { transform: translateX(-6px); text-align: left; }                   /* reads rightwards from its dot */
+.ms.ms--l { transform: translateX(calc(-100% + 6px)); text-align: right; }      /* reads leftwards */
 .handle {
   position: absolute; left: 0; top: 16px;
   width: 36px; height: 36px; margin-left: -18px;
@@ -196,7 +196,12 @@ img { max-width: 100%; display: block; }
   .bar__timeline .step--icon { display: none; }
   .bar__inner { gap: 18px; }
   .track { margin: 0 8px; }
-  .ms { font-size: 10px; line-height: 12px; }
+  /* Too many stops for every name: show just the current one */
+  .ms { font-size: 10px; line-height: 12px; opacity: 0; }
+  .ms.is-on { opacity: 1; }
+  .ms.is-dim:not(.is-on) { opacity: 0; }
+  .ms:not(.ms--minor) { width: max-content !important; max-width: 60vw; }
+  .yr--minor { display: none; }
   .ms.ms--minor { font-size: 10px; line-height: 14px; }
 }
 @media (max-width: 480px) {

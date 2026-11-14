@@ -345,6 +345,7 @@
   function scrollForStop(i) { return L.top + L.intro + i * L.seg; }
 
   var target = { i: -1, until: 0 }; // where a smooth scroll is heading, so repeated clicks keep stepping
+  var swipeFlip = null;              // set during a swipe-triggered move (see the swipe handler)
   function goToStop(i) {
     i = clamp(i, 0, LAST);
     target = { i: i, until: performance.now() + 900 };
@@ -416,8 +417,11 @@
     // Card follows the handle: slides the same way and fades towards the midpoint
     if (near !== shownIdx) fillCard(near);
     var d = offsetFrom(near, y);
+    // After a swipe the card follows the finger instead: it leaves the way you pushed it
+    var flip = swipeFlip && performance.now() < swipeFlip.until;
+    if (flip && near === target.i && Math.abs(d) < 0.01) swipeFlip = null; // arrived: back to normal
     card.style.opacity = String(1 - Math.pow(Math.abs(d), 1.6));
-    card.style.transform = reduceMotion ? 'none' : 'translateX(' + (d * slideDistance()).toFixed(1) + 'px)';
+    card.style.transform = reduceMotion ? 'none' : 'translateX(' + ((flip ? -d : d) * slideDistance()).toFixed(1) + 'px)';
     yearEl.textContent = near === LAST ? 'Now' : String(Math.round(yearAt(y)));
 
     // What's been collected so far (nothing until the intro is done)
@@ -538,8 +542,12 @@
     var t = e.changedTouches[0], dx = t.clientX - swipe.x, dy = t.clientY - swipe.y;
     var quick = Date.now() - swipe.t < 800;
     swipe = null;
-    if (quick && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+    if (quick && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      swipeFlip = { until: performance.now() + 2000 }; // card slides with the finger for this move
+      step(dx < 0 ? 1 : -1);
+    }
   }, { passive: true });
+  window.addEventListener('wheel', function () { swipeFlip = null; }, { passive: true });
   mainWin.addEventListener('touchcancel', function () { swipe = null; }, { passive: true });
 
   /* ---------- Mobile drawer ---------- */

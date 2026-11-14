@@ -14,7 +14,7 @@
 window.SITE = {
   name: 'Justin Hui',
   role: 'Interface designer · Broadcast control systems',
-  photo: '', // e.g. 'assets/img/photo.jpg' — leave empty to show initials
+  photo: 'assets/img/photo.jpg', // leave empty to show initials instead
   initials: 'JH',
   email: 'justin.t.hui@gmail.com',
   linkedin: 'https://www.linkedin.com/in/justinhui12',

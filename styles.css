@@ -267,7 +267,10 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
 }
 .stage.is-live { pointer-events: auto; }
-.main { display: flex; flex-direction: column; gap: 20px; min-height: 0; min-width: 0; touch-action: pan-y; } /* sideways swipes are handled in script.js */
+.main { display: flex; flex-direction: column; gap: 20px; min-height: 0; min-width: 0; touch-action: pan-y; } /* sideways drags are handled in script.js */
+.main .milestone { cursor: grab; }
+.main .milestone a { cursor: pointer; }
+.main.is-grabbing, .main.is-grabbing * { cursor: grabbing !important; user-select: none; -webkit-user-select: none; }
 .main__top { flex: 1; display: flex; gap: 32px; min-height: 0; }
 
 .milestone {

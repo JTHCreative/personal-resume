@@ -345,6 +345,7 @@
   function scrollForStop(i) { return L.top + L.intro + i * L.seg; }
 
   var target = { i: -1, until: 0 }; // where a smooth scroll is heading, so repeated clicks keep stepping
+  var cardCtl = null;                // set while the card is being dragged by hand (see "Grab the card")
   function goToStop(i) {
     i = clamp(i, 0, LAST);
     target = { i: i, until: performance.now() + 900 };
@@ -413,13 +414,16 @@
     fill.style.width = p + '%';
     var near = nearest(y);
 
-    // Card follows the handle: slides the same way and fades towards the midpoint
-    if (near !== shownIdx) fillCard(near);
     var d = offsetFrom(near, y);
-    // Moving to the future, cards travel right-to-left (like pushing content aside with a finger):
-    // the current card leaves to the left and the next one enters from the right. Same for every input.
-    card.style.opacity = String(1 - Math.pow(Math.abs(d), 1.6));
-    card.style.transform = reduceMotion ? 'none' : 'translateX(' + (-d * slideDistance()).toFixed(1) + 'px)';
+    // After a card drag hands off to the timeline, give control back once the page has arrived
+    if (cardCtl && cardCtl.phase === 'settle' && near === cardCtl.target && Math.abs(d) < 0.01 && performance.now() > cardCtl.inDone) releaseCard(true);
+    if (!cardCtl) {
+      // Card follows the timeline. Moving to the future, cards travel right-to-left (like pushing
+      // content aside with a finger): the current card leaves to the left, the next enters from the right.
+      if (near !== shownIdx) fillCard(near);
+      card.style.opacity = String(1 - Math.pow(Math.abs(d), 1.6));
+      card.style.transform = reduceMotion ? 'none' : 'translateX(' + (-d * slideDistance()).toFixed(1) + 'px)';
+    }
     yearEl.textContent = near === LAST ? 'Now' : String(Math.round(yearAt(y)));
 
     // What's been collected so far (nothing until the intro is done)
@@ -524,25 +528,88 @@
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   });
 
-  /* ---------- Swipe the main window to move through time (touch screens) ----------
-     Swipe left = forward to the next stop, swipe right = back. Vertical scrolling still
-     works as normal; swipes that start on a sideways-scrolling row are left to that row. */
-  var mainWin = $('.main'), swipe = null;
-  mainWin.addEventListener('touchstart', function (e) {
-    if (e.touches.length !== 1) { swipe = null; return; }
+  /* ---------- Grab the card and drag it sideways (finger or mouse) ----------
+     The card latches onto the pointer and follows it left/right only, fading as it moves away
+     from centre. Let go far enough (or flick) and it flies off: left = forward in time, right =
+     back; the next card slides in from the other side and the timeline follows. Otherwise it
+     springs back. Vertical movement is left to the page so scrolling still works. */
+  var mainWin = $('.main'), grab = null;
+  function setCard(x, op, ms) {
+    card.style.transition = ms ? 'transform ' + ms + 'ms cubic-bezier(.2, .8, .2, 1), opacity ' + ms + 'ms ease' : 'none';
+    card.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
+    card.style.opacity = String(op);
+  }
+  function fadeFor(x) {
+    var w = card.offsetWidth || 300;
+    return Math.max(0, 1 - Math.pow(Math.min(1, Math.abs(x) / (w * 0.75)), 1.3));
+  }
+  function releaseCard(fromFrame) {
+    if (!cardCtl) return;
+    clearTimeout(cardCtl.timer);
+    cardCtl = null;
+    card.style.transition = '';
+    if (!fromFrame) frame();
+  }
+  mainWin.addEventListener('pointerdown', function (e) {
+    if (e.button && e.button !== 0) return;
+    if (!stage.classList.contains('is-live') || (cardCtl && cardCtl.phase !== 'back')) return;
+    if (e.target.closest('a, button, input, select, textarea')) return; // links and buttons still click
     var row = e.target.closest('.chips--hero');
-    if (row && row.scrollWidth > row.clientWidth) { swipe = null; return; }
-    var t = e.touches[0];
-    swipe = { x: t.clientX, y: t.clientY, t: Date.now() };
-  }, { passive: true });
-  mainWin.addEventListener('touchend', function (e) {
-    if (!swipe) return;
-    var t = e.changedTouches[0], dx = t.clientX - swipe.x, dy = t.clientY - swipe.y;
-    var quick = Date.now() - swipe.t < 800;
-    swipe = null;
-    if (quick && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
-  }, { passive: true });
-  mainWin.addEventListener('touchcancel', function () { swipe = null; }, { passive: true });
+    if (row && row.scrollWidth > row.clientWidth) return;           // that row scrolls sideways itself
+    grab = { id: e.pointerId, x: e.clientX, y: e.clientY, locked: false, cur: 0, v: 0,
+             lastX: e.clientX, lastT: performance.now(), from: nearest(state.y) };
+  });
+  mainWin.addEventListener('pointermove', function (e) {
+    if (!grab || e.pointerId !== grab.id) return;
+    var dx = e.clientX - grab.x, dy = e.clientY - grab.y;
+    if (!grab.locked) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dy) >= Math.abs(dx)) { grab = null; return; }    // vertical: it's a scroll
+      grab.locked = true;
+      if (cardCtl) clearTimeout(cardCtl.timer);
+      cardCtl = { phase: 'drag' };
+      mainWin.classList.add('is-grabbing');
+      if (window.getSelection) window.getSelection().removeAllRanges();
+      try { mainWin.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    e.preventDefault();
+    var now = performance.now();
+    grab.v = (e.clientX - grab.lastX) / Math.max(1, now - grab.lastT);
+    grab.lastX = e.clientX; grab.lastT = now;
+    // Nothing before the first stop or after the last: resist and let it spring back
+    var atEnd = (dx > 0 && grab.from === 0) || (dx < 0 && grab.from === LAST);
+    grab.cur = atEnd ? dx * 0.3 : dx;
+    setCard(grab.cur, atEnd ? 1 : fadeFor(grab.cur), 0);
+  });
+  function letGo(e, cancelled) {
+    if (!grab || e.pointerId !== grab.id) return;
+    var g = grab; grab = null;
+    if (!g.locked) return;
+    mainWin.classList.remove('is-grabbing');
+    var w = card.offsetWidth || 300, x = g.cur, dir = x < 0 ? 1 : -1, to = g.from + dir;
+    var far = Math.abs(x) > Math.min(140, w * 0.28);
+    var moving = performance.now() - g.lastT < 100;                  // a pause before letting go isn't a flick
+    var flick = moving && Math.abs(g.v) > 0.5 && Math.abs(x) > 30 && (g.v < 0) === (x < 0);
+    if (cancelled || to < 0 || to > LAST || !(far || flick)) {
+      setCard(0, 1, 260);                                            // spring back to centre
+      cardCtl = { phase: 'back', timer: setTimeout(releaseCard, 280) };
+      return;
+    }
+    var out = reduceMotion ? 0 : 200;
+    setCard(-dir * (w + 40), 0, out);                                // fly off the way it was pushed
+    cardCtl = { phase: 'out', target: to };
+    cardCtl.timer = setTimeout(function () {
+      goToStop(to);                                                  // timeline and collections follow
+      fillCard(to);
+      setCard(dir * 60, 0, 0);                                       // next card waits on the other side…
+      void card.offsetWidth;
+      setCard(0, 1, reduceMotion ? 0 : 280);                         // …and slides in
+      cardCtl = { phase: 'settle', target: to, inDone: performance.now() + 300 };
+      cardCtl.timer = setTimeout(releaseCard, 1800);                 // safety net
+    }, out);
+  }
+  mainWin.addEventListener('pointerup', function (e) { letGo(e, false); });
+  mainWin.addEventListener('pointercancel', function (e) { letGo(e, true); });
 
   /* ---------- Mobile drawer ---------- */
   var stageHome = sidebar.parentNode;

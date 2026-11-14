@@ -8,6 +8,9 @@
     - cases    → "Case studies" thumbnails (click to open)
   Scrolling back past a stop puts its items back.
 
+  passing (optional) = labels collected one by one between this stop and the next,
+        without a dot of their own on the timeline.
+
   type: 'major' = a job (gold dot, name always shown on the timeline)
         'minor' = a key project (blue dot, name shown when you reach it).
   Minor stops sit between the jobs either side. `yr` can be null if unknown.
@@ -97,7 +100,7 @@ window.SITE = {
         { name: 'Workflow design', note: 'On-site consultation, panel design in Cerebrum Designer, hand-off, training and support' },
         { name: 'Training & documentation', note: 'Advanced Cerebrum training and internal tools from pre-sales to support' }
       ],
-      clients: ['FOX World Cup', 'MLB', 'LMG', 'Monumental', 'Bell Centre', 'CA Assembly'],
+      clients: ['MLB', 'Monumental', 'CA Assembly'],
       tools: { interface: ['Panel prototyping', 'Workflow mapping'], creative: [], systems: ['Git', 'Bitbucket', 'Jira'] },
       cases: [
         { title: 'Proc Control', tag: 'Modular', img: 'assets/img/proc-control.jpg',
@@ -114,6 +117,8 @@ window.SITE = {
       body: 'Operator interfaces designed, deployed and supported for Gravity Media.',
       projects: [],
       clients: ['Gravity Media'],
+      // Collected one by one between Gravity Media (2022) and Kraft Sports (2023), in this order
+      passing: ['FOX World Cup', 'Bell Centre', 'LMG'],
       tools: { interface: [], creative: [], systems: [] },
       cases: []
     },

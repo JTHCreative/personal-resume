@@ -97,6 +97,14 @@
   var ITEMS = { clients: [], interface: [], creative: [], systems: [] }, CASES = [];
   STOPS.forEach(function (s, i) {
     (s.clients || []).forEach(function (c) { c = norm(c); ITEMS.clients.push({ key: 'c:' + c.name, name: c.name, accent: c.accent, stop: i }); });
+    // `passing`: labels collected one by one on the way from this stop to the next (no dot of their own).
+    // They're spread over the first half of the way, before the next stop's card (and labels) take over.
+    var pass = s.passing || [];
+    pass.forEach(function (c, j) {
+      c = norm(c);
+      var at = i + (pass.length === 1 ? 0.2 : 0.06 + 0.3 * j / (pass.length - 1));
+      ITEMS.clients.push({ key: 'c:' + c.name, name: c.name, accent: c.accent, stop: i, at: at });
+    });
     ['interface', 'creative', 'systems'].forEach(function (g) {
       ((s.tools || {})[g] || []).forEach(function (t) { ITEMS[g].push({ key: g + ':' + t, name: t, stop: i }); });
     });
@@ -118,11 +126,13 @@
 
   // Keep a list in sync with "everything up to stop k": new items animate in, removed ones animate out.
   var added = []; // nodes collected in the latest step, so the sidebar can bring them into view
+  var curY = 0; // current timeline position, for labels collected between stops
+  function has(item, k) { return item.at === undefined ? item.stop <= k : (k >= 0 && curY >= item.at - 0.001); }
   function syncList(name, k) {
     var L = lists[name], prev = null, have = 0;
     ITEMS[name].forEach(function (item) {
       var node = L.nodes[item.key];
-      if (item.stop <= k) {
+      if (has(item, k)) {
         have++;
         if (!node) {
           node = L.nodes[item.key] = makeChip(item);
@@ -346,7 +356,9 @@
 
     // What's been collected so far (nothing until the intro is done)
     var k = q < 0.85 ? -1 : near;
-    if (k !== state.k) collect(k);
+    curY = y;
+    var passed = k < 0 ? 0 : ITEMS.clients.filter(function (it) { return it.at !== undefined && y >= it.at - 0.001; }).length;
+    if (k !== state.k || passed !== state.passed) collect(k, passed);
 
     STOPS.forEach(function (st, i) {
       dots[i].classList.toggle('is-past', i <= y + 0.001);
@@ -362,9 +374,9 @@
     nextBtn.disabled = near === LAST;
   }
 
-  function collect(k) {
-    var forward = k > state.k;
-    state.k = k; added = [];
+  function collect(k, passed) {
+    var forward = k > state.k || passed > (state.passed || 0);
+    state.k = k; state.passed = passed || 0; added = [];
     var nClients = syncList('clients', k);
     var nTools = syncList('interface', k) + syncList('creative', k) + syncList('systems', k);
     var nCases = syncCases(k);

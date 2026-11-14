@@ -5,9 +5,11 @@ Plain HTML, CSS and JavaScript: no build step and no dependencies.
 
 ## Files
 
-- `index.html` — all page content (profile, work, experience, approach, toolset, contact)
+- `data.js` — **the timeline content**: one entry per stop with its projects, the
+  "interfaces in production" labels, tool kit items and case studies collected there
+- `index.html` — page structure (intro, timeline stage, sidebar, approach, credentials, contact)
 - `styles.css` — design tokens and layout (colours and type taken from the mockup)
-- `script.js` — the interactive career timeline and nav highlighting
+- `script.js` — scroll-driven timeline, collecting animations, drawer and case study viewer
 - `assets/img/` — UI example screenshots
 
 ## Preview locally
@@ -20,7 +22,9 @@ Then open http://localhost:8000.
 
 ## Edit the timeline
 
-The timeline milestones live in the `STOPS` array at the top of `script.js`.
+Everything the timeline shows comes from `data.js`. Add, remove or edit stops and their
+`projects`, `clients`, `tools` and `cases`; the sidebar counts and slots update automatically.
+Set `photo` to an image path to replace the initials in the photo circle.
 
 ## Publish with GitHub Pages
 

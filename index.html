@@ -9,271 +9,213 @@
   <meta property="og:description" content="Operator interfaces for live broadcast, designed, deployed and supported.">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#1D1D24">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2327272F'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-size='28' fill='%23F1F2F3'%3EJH%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%2327272F'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-size='26' fill='%23F1F2F3'%3EJH%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;1,400&family=Crimson+Pro:ital@0;1&family=Inter:wght@400;500&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
+  <a class="skip" href="#after">Skip the timeline</a>
 
-  <header class="nav">
-    <div class="wrap nav__inner">
-      <a class="mono" href="#top" aria-label="Justin Hui, home">JH</a>
-      <nav aria-label="Sections">
-        <ul class="nav__links">
-          <li><a href="#timeline">Timeline</a></li>
-          <li><a href="#work">Work</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#approach">Approach</a></li>
-          <li><a href="#toolset">Toolset</a></li>
-        </ul>
-      </nav>
-      <a class="btn btn--primary nav__cta" href="#contact">Contact</a>
+  <!-- Contact: the only control visible from the start -->
+  <a class="btn btn--primary contact-fab" href="#contact">Contact me</a>
+
+  <!-- Top bar: fades in once the intro scrolls away -->
+  <header class="bar" data-bar>
+    <div class="bar__inner">
+      <a class="brand" href="#top" aria-label="Back to the start">
+        <span class="avatar avatar--sm" data-avatar></span>
+        <span class="brand__text">
+          <span class="brand__name" data-name></span>
+          <span class="brand__role" data-role></span>
+        </span>
+      </a>
+
+      <div class="bar__timeline">
+        <button class="step step--icon" type="button" data-step="-1" aria-label="Earlier milestone">←</button>
+        <div class="track" data-track>
+          <div class="track__line" aria-hidden="true"></div>
+          <div class="track__fill" aria-hidden="true" data-fill></div>
+          <div class="track__stops" data-stops></div>
+          <div class="handle" data-handle role="slider" tabindex="0" aria-label="Career timeline">
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1D1D24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg>
+          </div>
+        </div>
+        <button class="step step--icon" type="button" data-step="1" aria-label="Later milestone">→</button>
+      </div>
     </div>
   </header>
 
-  <main id="main">
-    <!-- HERO -->
-    <section class="hero wrap" id="top">
-      <p class="eyebrow">Interface designer · Broadcast control systems</p>
-      <h1 class="hero__title">Justin Hui</h1>
-      <p class="hero__lede">I design, build and support the operator interfaces that live broadcast relies on, for control rooms where speed and reliability matter most.</p>
-      <dl class="stats">
-        <div><dt>Years live</dt><dd>11</dd></div>
-        <div><dt>Facilities</dt><dd>15+</dd></div>
-        <div><dt>UX cert</dt><dd>2025</dd></div>
-      </dl>
-      <p class="hero__meta">Millbrae, CA · Hybrid / remote</p>
-    </section>
+  <main>
+    <!-- The scrolling story: intro, then the timeline driven by scroll -->
+    <div class="story" id="top" data-story>
+      <div class="story__sticky">
 
-    <!-- CAREER SCRUBBER (from the mockup) -->
-    <section class="scrubber wrap" id="timeline" aria-labelledby="scrub-title">
-      <div class="scrubber__head">
-        <div class="scrubber__titles">
-          <h2 id="scrub-title" class="h-display">Justin Hui, 2015 to now</h2>
-          <p class="sub">Drag the handle along the line, or use the arrows.</p>
-        </div>
-        <div class="scrubber__steps">
-          <button class="step" type="button" data-step="-1">← Earlier</button>
-          <button class="step" type="button" data-step="1">Later →</button>
-        </div>
-      </div>
+        <!-- 1. Intro -->
+        <section class="intro" data-intro aria-labelledby="intro-name">
+          <div class="intro__inner">
+            <span class="avatar avatar--lg" data-avatar></span>
+            <p class="eyebrow" data-role></p>
+            <h1 class="intro__name" id="intro-name" data-name></h1>
+            <p class="intro__lede">I design, build and support the operator interfaces that live broadcast relies on, for control rooms where speed and reliability matter most.</p>
+            <p class="intro__profile">Over ten years inside live production (cameras, replay, routing), now shipping custom operator interfaces for facilities where speed and reliability are critical. I stay with the user the whole way: planning with operators, modelling workflows, designing and coding the interfaces, and supporting them on air.</p>
+            <dl class="stats">
+              <div><dt>Years live</dt><dd>11</dd></div>
+              <div><dt>Facilities</dt><dd>15+</dd></div>
+              <div><dt>UX cert</dt><dd>2025</dd></div>
+            </dl>
+            <p class="intro__meta">Millbrae, CA · Hybrid / remote</p>
+          </div>
+          <div class="scroll-cue" aria-hidden="true">
+            <span>Scroll to start the timeline</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          </div>
+        </section>
 
-      <div class="track" data-track>
-        <div class="track__line" aria-hidden="true"></div>
-        <div class="track__fill" aria-hidden="true" data-fill></div>
-        <div class="track__stops" data-stops></div>
-        <div class="handle" data-handle role="slider" tabindex="0"
-             aria-label="Career timeline" aria-valuemin="2015" aria-valuemax="2026">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg>
-        </div>
-      </div>
-
-      <div class="scrubber__body">
-        <article class="milestone" aria-live="polite">
-          <span class="meta" data-cur-meta></span>
-          <h3 class="milestone__title" data-cur-title></h3>
-          <p class="milestone__body" data-cur-body></p>
-        </article>
-        <div class="bigyear" aria-hidden="true" data-year></div>
-      </div>
-
-      <div class="collected" aria-label="Collected milestones">
-        <span class="meta" data-got></span>
-        <div class="badges" data-badges></div>
-      </div>
-    </section>
-
-    <!-- PROFILE -->
-    <section class="section wrap" id="profile" aria-labelledby="profile-title">
-      <div class="section__head">
-        <p class="eyebrow">01 · Profile</p>
-        <h2 id="profile-title" class="h-display">With the operator, start to finish</h2>
-      </div>
-      <div class="profile">
-        <p class="prose">I am a Senior Technical Architect who designs, builds and supports user interfaces relied upon in the fast-paced, live broadcast space. I spent over ten years inside live production (cameras, replay, routing) and now ship custom operator interfaces for facilities where speed and reliability are critical.</p>
-        <p class="prose">I stay with the user through the whole process: planning with operators, modelling workflows, designing and coding the interfaces, then delivering and supporting them on air.</p>
-      </div>
-
-      <div class="clients">
-        <div class="clients__head">
-          <h3 class="h-card">Interfaces in production</h3>
-          <span class="meta">Designed · deployed · supported</span>
-        </div>
-        <ul class="chips">
-          <li>NBC</li><li>FOX World Cup</li><li>MLB Network</li><li>YES Network</li><li>Scripps</li>
-          <li>Gravity Media</li><li>LMG</li><li>Monumental</li><li>Bell Centre</li><li>Kraft Sports</li>
-          <li>CA Assembly</li><li>Rogers Media</li><li>Dome Productions</li><li>MLB</li>
-          <li class="chip--muted">and more…</li>
-          <li class="chip--accent"><a href="#contact">Your team?</a></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- WORK -->
-    <section class="section wrap" id="work" aria-labelledby="work-title">
-      <div class="section__head">
-        <p class="eyebrow">02 · UI examples</p>
-        <h2 id="work-title" class="h-display">Selected interfaces</h2>
-        <p class="sub">Full case studies on request.</p>
-      </div>
-      <div class="work">
-        <figure class="card work__item">
-          <div class="work__shot"><img src="assets/img/proc-control.jpg" alt="Proc Control interface: a dark operator dashboard with rows of source buttons, fader strips and pinnable modules" loading="lazy" width="452" height="260"></div>
-          <figcaption>
-            <span class="tag">Modular</span>
-            <h3 class="h-card">Proc Control</h3>
-            <p>Designed for different formats and platforms, and built from pinnable modules so each operator can assemble their own custom dashboard.</p>
-          </figcaption>
-        </figure>
-        <figure class="card work__item">
-          <div class="work__shot"><img src="assets/img/panel-builder.jpg" alt="Routing panel builder: a hardware panel preview above a grid where operators drag buttons into a layout" loading="lazy" width="452" height="260"></div>
-          <figcaption>
-            <span class="tag">Visual</span>
-            <h3 class="h-card">Routing panel builder</h3>
-            <p>Lets operators create the layouts they want on the fly, turning a complicated multi-step process into a visual experience.</p>
-          </figcaption>
-        </figure>
-        <figure class="card work__item">
-          <div class="work__shot"><img src="assets/img/config-tool.jpg" alt="UI Framework welcome screen asking 'What would you like to do?' with six large task tiles" loading="lazy" width="452" height="260"></div>
-          <figcaption>
-            <span class="tag">Human-centred</span>
-            <h3 class="h-card">System configuration guide</h3>
-            <p>A configuration tool that doubles as a helper, pointing the user in the right direction and offering a hand through each step.</p>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section class="section wrap" id="experience" aria-labelledby="exp-title">
-      <div class="section__head">
-        <p class="eyebrow">03 · Experience</p>
-        <h2 id="exp-title" class="h-display">EVS Broadcast Equipment</h2>
-        <p class="sub">Nine years · 2017 to present</p>
-      </div>
-
-      <div class="roles">
-        <article class="role card">
-          <header class="role__head">
-            <div>
-              <h3 class="h-card">Senior Technical Architect</h3>
-              <span class="meta">EVS Broadcast Equipment · Remote</span>
+        <!-- 2. Timeline stage: main window + sidebar -->
+        <div class="stage" data-stage>
+          <section class="main" aria-label="Timeline milestone">
+            <div class="main__top">
+              <article class="milestone" aria-live="polite" data-card>
+                <span class="meta" data-cur-meta></span>
+                <h2 class="milestone__title" data-cur-title></h2>
+                <p class="milestone__body" data-cur-body></p>
+                <div class="projects" data-projects-wrap>
+                  <h3 class="label">Projects</h3>
+                  <ul class="projects__list" data-projects></ul>
+                </div>
+                <div class="milestone__cta" data-cta hidden>
+                  <a class="btn btn--primary" data-email></a>
+                  <a class="btn" data-linkedin target="_blank" rel="noopener">LinkedIn ↗</a>
+                </div>
+              </article>
+              <div class="bigyear" aria-hidden="true" data-year></div>
             </div>
-            <span class="when">May 2022 — Present</span>
-          </header>
-          <ul class="bullets">
-            <li>Designed, programmed and troubleshot critical operator interfaces running daily at numerous live broadcast facilities, from single-operator routing panels to full master-control configuration applications.</li>
-            <li>Turned operator workflows into human-centred designs: on-site consultation and review, panel design and iteration in Cerebrum Designer, hand-off and training, through to support.</li>
-            <li>Delivered advanced training on Cerebrum and Cerebrum Designer, breaking complex engineering and design concepts down into easily understood stories.</li>
-            <li>Consulted on end-to-end media infrastructure across news, sports, corporate tech, education, government and master control. Authored internal documentation and tools that carry a project from pre-sales through implementation to support.</li>
-          </ul>
-        </article>
 
-        <article class="role card">
-          <header class="role__head">
-            <div>
-              <h3 class="h-card">Solutions Architect</h3>
-              <span class="meta">EVS Broadcast Equipment · Burbank, CA</span>
+            <section class="collections" data-collections aria-label="Collections">
+              <div class="panel__head">
+                <h3 class="label">Collections</h3>
+                <span class="meta" data-got></span>
+              </div>
+              <div class="badges" data-badges></div>
+            </section>
+          </section>
+
+          <aside class="sidebar" data-sidebar aria-label="Collected so far">
+            <div class="sidebar__head">
+              <h2 class="h-card">Collected</h2>
+              <button class="sidebar__close" type="button" data-drawer-close aria-label="Close collection">✕</button>
             </div>
-            <span class="when">Aug 2017 — May 2022</span>
-          </header>
-          <ul class="bullets">
-            <li>Shaped system architectures around customer requirements for Apple, Meta, Riot Games, NBC, ESPN and CBS: design drawings, tender responses, bills of material and quotations.</li>
-            <li>Designed and delivered product demos with the sales team, built the Cerebrum hardware and software interfaces those demos and internal trainings depended on, and carried customers through go-live and hand-over to support.</li>
-          </ul>
-        </article>
-      </div>
 
-      <div class="history">
-        <div class="history__head">
-          <h3 class="h-card">Broadcast history</h3>
-          <span class="when">2015 — 2017</span>
-        </div>
-        <ul class="history__list">
-          <li><strong>Video Operations Assistant</strong><span class="meta">San Francisco Giants</span><p>Control-room installation and maintenance, live broadcast systems, ballpark signage systems and gameday motion graphics.</p></li>
-          <li><strong>Technical Director / Video Engineer</strong><span class="meta">SAMMCO</span><p>Technical Director for the AT&amp;T Park SF Giants video-board show; camera operator, video shader, replay and graphics operator across Bay Area venues.</p></li>
-          <li><strong>Control Room Technician</strong><span class="meta">SAP Center A&amp;V</span><p>Technical Director, Chyron graphics and EVS replay for Sharks and Barracuda games.</p></li>
-          <li><strong>Assistant Video Engineer</strong><span class="meta">Stanford Athletics</span><p>Control room and facility engineering at Stanford Stadium, Maples Pavilion and associated venues; video-board content design and animation.</p></li>
-          <li><strong>WebEx Facilitator</strong><span class="meta">Cisco TV</span><p>Ran presenters and attendees through live streaming sessions.</p></li>
-        </ul>
-      </div>
-    </section>
+            <section class="panel">
+              <div class="panel__head">
+                <h3 class="label">Interfaces in production</h3>
+                <span class="count" data-count="clients"></span>
+              </div>
+              <ul class="chips" data-list="clients"></ul>
+              <p class="empty" data-empty="clients">Scroll on to collect the facilities running my interfaces.</p>
+            </section>
 
-    <!-- APPROACH -->
-    <section class="section wrap" id="approach" aria-labelledby="approach-title">
-      <div class="section__head">
-        <p class="eyebrow">04 · Approach</p>
-        <h2 id="approach-title" class="h-display">How I work</h2>
-      </div>
-      <ol class="approach">
-        <li class="card"><span class="approach__num">01</span><h3 class="h-card">Observe</h3><p>Design is solving a problem with style. Understand the user's problem, then make the solution fun to use.</p></li>
-        <li class="card"><span class="approach__num">02</span><h3 class="h-card">Reduce</h3><p>Simplify. Every element earns its space. Speed is king: break complex workflows down into simple interactions.</p></li>
-        <li class="card"><span class="approach__num">03</span><h3 class="h-card">Improve</h3><p>Delivery is just the beginning. Support what has been designed and relentlessly improve it with customer feedback.</p></li>
-      </ol>
-    </section>
+            <section class="panel">
+              <div class="panel__head">
+                <h3 class="label">Tool kit</h3>
+                <span class="count" data-count="tools"></span>
+              </div>
+              <div class="toolkit">
+                <div class="toolkit__group"><h4 class="sublabel">Interface</h4><ul class="chips" data-list="interface"></ul></div>
+                <div class="toolkit__group"><h4 class="sublabel">Creative</h4><ul class="chips" data-list="creative"></ul></div>
+                <div class="toolkit__group"><h4 class="sublabel">Systems</h4><ul class="chips" data-list="systems"></ul></div>
+              </div>
+            </section>
 
-    <!-- TOOLSET / CERTS / EDUCATION -->
-    <section class="section wrap" id="toolset" aria-labelledby="tools-title">
-      <div class="section__head">
-        <p class="eyebrow">05 · Toolset</p>
-        <h2 id="tools-title" class="h-display">Tools, certificates, school</h2>
-      </div>
-      <div class="tools">
-        <div class="tools__group">
-          <h3 class="meta">Interface</h3>
-          <ul class="chips"><li>Cerebrum Designer</li><li>Panel prototyping</li><li>Hardware panels</li><li>Workflow mapping</li></ul>
-        </div>
-        <div class="tools__group">
-          <h3 class="meta">Creative</h3>
-          <ul class="chips"><li>Figma</li><li>Photoshop</li><li>After Effects</li><li>Premiere Pro</li></ul>
-        </div>
-        <div class="tools__group">
-          <h3 class="meta">Systems</h3>
-          <ul class="chips"><li>Git</li><li>Bitbucket</li><li>Jira</li><li>Microsoft D365</li><li>Cerebrum</li><li>Visio</li><li>Neuron</li><li>IP Director</li><li>LSM / XT-VIA</li></ul>
+            <section class="panel">
+              <div class="panel__head">
+                <h3 class="label">Case studies</h3>
+                <span class="count" data-count="cases"></span>
+              </div>
+              <div class="cases" data-cases></div>
+            </section>
+          </aside>
         </div>
       </div>
+    </div>
 
-      <div class="creds">
-        <div class="card creds__col">
-          <h3 class="h-card">Certification</h3>
-          <dl class="timeline-list">
-            <div><dt>2025</dt><dd>Foundations of User Experience (UX) Design · Google</dd></div>
-            <div><dt>2020</dt><dd>AWS Certified Solutions Architect · Associate coursework</dd></div>
-            <div><dt>+10</dt><dd>Further licences and certifications, full list on request</dd></div>
-          </dl>
-        </div>
-        <div class="card creds__col">
-          <h3 class="h-card">Education</h3>
-          <dl class="timeline-list">
-            <div><dt>2013 — 2015</dt><dd><strong>College of San Mateo</strong><br>Associate of Arts, Broadcast &amp; Electronic Media · GPA 4.0</dd></div>
-            <div><dt>2007 — 2012</dt><dd><strong>Cal Poly, San Luis Obispo</strong><br>Bachelor of Science, Biomedical Engineering</dd></div>
-          </dl>
-        </div>
-      </div>
-    </section>
+    <!-- Mobile: the sidebar becomes a pull-up drawer -->
+    <button class="drawer-toggle" type="button" data-drawer-open aria-label="Open collection">
+      <span>Collection</span><span class="drawer-toggle__n" data-total>0</span>
+    </button>
 
-    <!-- CONTACT -->
-    <section class="contact wrap" id="contact" aria-labelledby="contact-title">
-      <div class="card contact__card">
-        <p class="eyebrow">Now · Looking for</p>
-        <h2 id="contact-title" class="h-display">A UI / UX design role</h2>
-        <p class="prose">Simple, clean interfaces anyone can pick up without training. Hybrid or remote from Millbrae, CA.</p>
-        <div class="contact__actions">
-          <a class="btn btn--primary" href="mailto:justin.t.hui@gmail.com">justin.t.hui@gmail.com</a>
-          <a class="btn" href="https://www.linkedin.com/in/justinhui12" target="_blank" rel="noopener">LinkedIn ↗</a>
+    <!-- After the timeline -->
+    <div id="after">
+      <section class="section wrap" id="approach" aria-labelledby="approach-title">
+        <div class="section__head">
+          <p class="eyebrow">Approach</p>
+          <h2 id="approach-title" class="h-display">How I work</h2>
         </div>
-      </div>
-    </section>
+        <ol class="approach">
+          <li class="card"><span class="approach__num">01</span><h3 class="h-card">Observe</h3><p>Design is solving a problem with style. Understand the user's problem, then make the solution fun to use.</p></li>
+          <li class="card"><span class="approach__num">02</span><h3 class="h-card">Reduce</h3><p>Simplify. Every element earns its space. Speed is king: break complex workflows down into simple interactions.</p></li>
+          <li class="card"><span class="approach__num">03</span><h3 class="h-card">Improve</h3><p>Delivery is just the beginning. Support what has been designed and relentlessly improve it with customer feedback.</p></li>
+        </ol>
+      </section>
+
+      <section class="section wrap" id="school" aria-labelledby="school-title">
+        <div class="section__head">
+          <p class="eyebrow">Credentials</p>
+          <h2 id="school-title" class="h-display">Certificates &amp; school</h2>
+        </div>
+        <div class="creds">
+          <div class="card creds__col">
+            <h3 class="h-card">Certification</h3>
+            <dl class="timeline-list">
+              <div><dt>2025</dt><dd>Foundations of User Experience (UX) Design · Google</dd></div>
+              <div><dt>2020</dt><dd>AWS Certified Solutions Architect · Associate coursework</dd></div>
+              <div><dt>+10</dt><dd>Further licences and certifications, full list on request</dd></div>
+            </dl>
+          </div>
+          <div class="card creds__col">
+            <h3 class="h-card">Education</h3>
+            <dl class="timeline-list">
+              <div><dt>2013 — 2015</dt><dd><strong>College of San Mateo</strong><br>Associate of Arts, Broadcast &amp; Electronic Media · GPA 4.0</dd></div>
+              <div><dt>2007 — 2012</dt><dd><strong>Cal Poly, San Luis Obispo</strong><br>Bachelor of Science, Biomedical Engineering</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact wrap" id="contact" aria-labelledby="contact-title">
+        <div class="card contact__card">
+          <p class="eyebrow">Now · Looking for</p>
+          <h2 id="contact-title" class="h-display">A UI / UX design role</h2>
+          <p class="prose">Simple, clean interfaces anyone can pick up without training. Hybrid or remote from Millbrae, CA.</p>
+          <div class="contact__actions">
+            <a class="btn btn--primary" data-email></a>
+            <a class="btn" data-linkedin target="_blank" rel="noopener">LinkedIn ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer wrap">
+        <span>© <span data-yr>2026</span> Justin Hui</span>
+        <span>Millbrae, CA</span>
+      </footer>
+    </div>
   </main>
 
-  <footer class="footer wrap">
-    <span>© <span data-yr>2026</span> Justin Hui</span>
-    <span>Millbrae, CA</span>
-  </footer>
+  <!-- Case study viewer -->
+  <dialog class="viewer" data-viewer aria-labelledby="viewer-title">
+    <form method="dialog"><button class="viewer__close" aria-label="Close">✕</button></form>
+    <div class="viewer__shot" data-viewer-shot></div>
+    <div class="viewer__body">
+      <span class="tag" data-viewer-tag></span>
+      <h2 class="h-card" id="viewer-title" data-viewer-title></h2>
+      <p data-viewer-blurb></p>
+      <span class="meta" data-viewer-when></span>
+    </div>
+  </dialog>
 
+  <script src="data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

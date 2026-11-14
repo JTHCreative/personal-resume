@@ -133,7 +133,53 @@
   var TOOL_TOTAL = ITEMS.interface.length + ITEMS.creative.length + ITEMS.systems.length;
 
   var lists = {};
-  Object.keys(ITEMS).forEach(function (k) { lists[k] = { el: $('[data-list="' + k + '"]'), nodes: {} }; });
+  lists.clients = { el: $('[data-list="clients"]'), nodes: {} };
+
+  /* Toolbox: an inventory of fixed slots per group. Collected tools fill the slots in order;
+     empty slots show a "+". A group gets more slots automatically if it has more tools. */
+  var SLOTS = { interface: 4, creative: 4, systems: 12 };
+  var inv = {};
+  ['interface', 'creative', 'systems'].forEach(function (g) {
+    var ul = $('[data-slots="' + g + '"]'), n = Math.max(SLOTS[g], ITEMS[g].length);
+    inv[g] = [];
+    for (var i = 0; i < n; i++) {
+      var li = el('li', 'slot-inv');
+      li.innerHTML = '<span class="slot-inv__plus" aria-hidden="true">+</span><span class="slot-inv__name"></span>';
+      li.setAttribute('aria-label', 'Empty slot');
+      ul.appendChild(li); inv[g].push(li);
+    }
+  });
+  // Shrink a tool name a little if a long word doesn't fit its square
+  function fitSlot(li) {
+    var n = li.querySelector('.slot-inv__name'), fs = 9.5;
+    n.style.fontSize = '';
+    while (n.scrollWidth > n.clientWidth + 0.5 && fs > 7) { fs -= 0.5; n.style.fontSize = fs + 'px'; }
+  }
+  window.addEventListener('resize', function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.slot-inv.is-filled'), fitSlot);
+  });
+  function syncSlots(g, k) {
+    var items = ITEMS[g].filter(function (it) { return has(it, k); });
+    inv[g].forEach(function (li, i) {
+      var item = items[i], filled = li.classList.contains('is-filled');
+      if (item && li.dataset.key !== item.key) {
+        li.querySelector('.slot-inv__name').textContent = item.name;
+        li.dataset.key = item.key;
+        li.classList.add('is-filled');
+        fitSlot(li);
+        li.classList.remove('is-new'); void li.offsetWidth; li.classList.add('is-new');
+        li.addEventListener('animationend', function () { li.classList.remove('is-new'); }, { once: true });
+        li.setAttribute('aria-label', item.name);
+        added.push(li);
+      } else if (!item && filled) {
+        li.classList.remove('is-filled', 'is-new');
+        li.querySelector('.slot-inv__name').textContent = '';
+        delete li.dataset.key;
+        li.setAttribute('aria-label', 'Empty slot');
+      }
+    });
+    return items.length;
+  }
 
   function makeChip(item) {
     var li = el('li');
@@ -398,7 +444,7 @@
     var forward = k > state.k || passed > (state.passed || 0);
     state.k = k; state.passed = passed || 0; added = [];
     var nClients = syncList('clients', k);
-    var nTools = syncList('interface', k) + syncList('creative', k) + syncList('systems', k);
+    var nTools = syncSlots('interface', k) + syncSlots('creative', k) + syncSlots('systems', k);
     var nCases = syncCases(k);
     $('[data-count="clients"]').textContent = nClients + ' / ' + ITEMS.clients.length;
     $('[data-count="tools"]').textContent = nTools + ' / ' + TOOL_TOTAL;

@@ -28,7 +28,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
@@ -154,8 +154,8 @@ img { max-width: 100%; display: block; }
   z-index: 5; cursor: grab; touch-action: none; user-select: none;
 }
 .handle:active, .track.is-dragging .handle { cursor: grabbing; }
-.track:not(.is-dragging) .handle, .track:not(.is-dragging) .track__fill { transition: left .25s ease, width .25s ease; }
-@media (prefers-reduced-motion: reduce) { .track .handle, .track .track__fill { transition: none !important; } }
+/* Handle, fill and card motion is driven frame-by-frame in script.js */
+.milestone { will-change: transform, opacity; }
 
 .scrubber__body { display: flex; gap: 40px; margin-top: 40px; align-items: stretch; }
 .milestone {

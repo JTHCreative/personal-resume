@@ -23,23 +23,33 @@
     var yearEl = $('[data-year]'), gotEl = $('[data-got]');
     var prevBtn = root.querySelector('[data-step="-1"]'), nextBtn = root.querySelector('[data-step="1"]');
 
+    var card = $('.milestone');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // state.y is a (fractional) year between Y0 and Y1 — same model as the mockup's x.
-    var state = { y: 2022, drag: null, seen: { 2: true }, lastIdx: -1 };
+    var state = { y: 2022, drag: null, seen: { 2: true }, lastIdx: -1, tween: null };
 
     function pct(y) { return (y - Y0) / (Y1 - Y0) * 100; }
     function label(i) { return i === LAST ? 'Now' : String(STOPS[i].yr); }
-    function idxAt(y) { var b = 0; STOPS.forEach(function (s, i) { if (s.yr <= y + 0.001) b = i; }); return b; }
     function nearest(y) {
       var b = 0;
       STOPS.forEach(function (s, i) { if (Math.abs(s.yr - y) < Math.abs(STOPS[b].yr - y)) b = i; });
       return b;
+    }
+    // Signed distance from milestone i, scaled so ±1 is the midpoint to the neighbouring
+    // milestone (where the next card takes over). Positive = handle is to the right.
+    function offsetFrom(i, y) {
+      var s = STOPS[i].yr, delta = y - s;
+      var nb = delta >= 0 ? STOPS[i + 1] : STOPS[i - 1];
+      if (!nb) return 0; // past the ends there is no neighbour: card stays put
+      var half = Math.abs(nb.yr - s) / 2;
+      return Math.max(-1, Math.min(1, delta / half));
     }
     function yFromClientX(clientX) {
       var r = track.getBoundingClientRect();
       var f = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
       return Y0 + f * (Y1 - Y0);
     }
-
     // Build dots, labels, badges
     var dots = [], yrs = [], badges = [];
     STOPS.forEach(function (s, i) {
@@ -55,46 +65,96 @@
       b.type = 'button'; b.className = 'badge';
       b.innerHTML = '<span class="badge__yr"></span><span class="badge__t"></span>';
       b.querySelector('.badge__yr').textContent = label(i);
-      b.addEventListener('click', function () { goTo(i); });
+      b.addEventListener('click', function () { animateTo(i); });
       badgesEl.appendChild(b); badges.push(b);
     });
 
-    function goTo(i) {
-      i = Math.max(0, Math.min(LAST, i));
-      state.y = STOPS[i].yr; state.seen[i] = true; render();
-    }
-    function jump(dir) { goTo(idxAt(state.y) + dir); }
-
-    function render() {
-      var cur = idxAt(state.y), s = STOPS[cur], p = pct(state.y);
-      handle.style.left = p + '%';
-      fill.style.width = p + '%';
-
-      if (cur !== state.lastIdx) {
+    /* ----- Card motion -----
+       The card follows the handle like it's attached by a string: it is fully shown at
+       its milestone and slides (in the same direction the handle moves) and fades as the
+       handle leaves. Past the midpoint the next card comes in from the opposite side. */
+    function slideDistance() { return window.innerWidth <= 720 ? 36 : 64; }
+    function placeCard(i, d) {
+      if (i !== state.lastIdx) {
+        var s = STOPS[i];
         curMeta.textContent = s.when + ' · ' + s.kind;
         curTitle.textContent = s.title;
         curBody.textContent = s.body;
-        state.lastIdx = cur;
+        state.lastIdx = i;
       }
-      yearEl.textContent = cur === LAST ? 'Now' : String(Math.round(state.y));
+      var a = Math.abs(d);
+      card.style.opacity = String(1 - Math.pow(a, 1.6));
+      card.style.transform = reduceMotion ? 'none' : 'translateX(' + (d * slideDistance()).toFixed(1) + 'px)';
+    }
+
+    /* ----- Animated moves (buttons, keys, badges, release-snap) ----- */
+    function easeOut(t) { return 1 - Math.pow(1 - t, 2); }
+    function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function animateTo(i) {
+      i = Math.max(0, Math.min(LAST, i));
+      var from = state.y, to = STOPS[i].yr, fromIdx = nearest(from);
+      state.seen[i] = true;
+      if (state.tween) cancelAnimationFrame(state.tween.raf);
+      if (from === to) { state.tween = null; render(); return; }
+      // Jumping past more than one stop would flash every card in between,
+      // so in that case the old card slides out and the new one slides straight in.
+      var swap = fromIdx !== i;
+      var dir = to > from ? 1 : -1;
+      var d0 = offsetFrom(fromIdx, from);
+      var dur = reduceMotion ? 1 : (swap ? 520 : 280);
+      var t0 = performance.now();
+      var tw = state.tween = { swap: swap, card: null, raf: 0 };
+      (function step(now) {
+        var t = Math.min(1, (now - t0) / dur), e = ease(t);
+        state.y = from + (to - from) * e;
+        if (swap) {
+          // The card runs on its own steady clock so the fade-out/in is clearly visible
+          // (the handle's ease-in-out rushes through the midpoint).
+          var c = t < 0.5 ? easeOut(t / 0.5) : easeOut((t - 0.5) / 0.5);
+          tw.card = t < 0.5
+            ? { i: fromIdx, d: d0 + (dir - d0) * c }
+            : { i: i, d: -dir * (1 - c) };
+        }
+        render();
+        if (t < 1) tw.raf = requestAnimationFrame(step);
+        else { state.tween = null; state.y = to; render(); }
+      })(t0);
+    }
+    function jump(dir) {
+      var cur = nearest(state.y);
+      if (state.tween) cur = nearest(STOPS[cur].yr); // keep stepping from where we're headed
+      animateTo(cur + dir);
+    }
+
+    function render() {
+      var near = nearest(state.y), p = pct(state.y);
+      handle.style.left = p + '%';
+      fill.style.width = p + '%';
+
+      var tc = state.tween && state.tween.swap && state.tween.card;
+      if (tc) placeCard(tc.i, tc.d);
+      else placeCard(near, offsetFrom(near, state.y));
+
+      var shown = state.lastIdx, s = STOPS[shown];
+      yearEl.textContent = shown === LAST ? 'Now' : String(Math.round(state.y));
 
       var got = Object.keys(state.seen).length;
       gotEl.textContent = 'Milestones collected: ' + got + ' of ' + STOPS.length;
 
       STOPS.forEach(function (st, i) {
         dots[i].classList.toggle('is-past', st.yr <= state.y + 0.001);
-        yrs[i].classList.toggle('is-on', i === cur);
+        yrs[i].classList.toggle('is-on', i === near);
         var have = !!state.seen[i];
         badges[i].classList.toggle('is-have', have);
         badges[i].querySelector('.badge__t').textContent = have ? st.short : 'Not yet';
         badges[i].setAttribute('aria-label', label(i) + ': ' + (have ? st.short : 'not yet collected') + '. Show this milestone.');
-        badges[i].setAttribute('aria-current', i === cur ? 'step' : 'false');
+        badges[i].setAttribute('aria-current', i === near ? 'step' : 'false');
       });
 
       handle.setAttribute('aria-valuenow', String(Math.round(state.y)));
-      handle.setAttribute('aria-valuetext', label(cur) + ': ' + s.title);
-      prevBtn.disabled = cur === 0;
-      nextBtn.disabled = cur === LAST;
+      handle.setAttribute('aria-valuetext', label(shown) + ': ' + s.title);
+      prevBtn.disabled = near === 0;
+      nextBtn.disabled = near === LAST;
     }
 
     // Dragging the handle (relative, like the mockup)
@@ -102,6 +162,7 @@
       if (e.button && e.button !== 0) return;
       e.preventDefault(); e.stopPropagation();
       handle.focus({ preventScroll: true });
+      if (state.tween) { cancelAnimationFrame(state.tween.raf); state.tween = null; }
       var r = track.getBoundingClientRect();
       state.drag = { sx: e.clientX, oy: state.y, w: r.width };
       track.classList.add('is-dragging');
@@ -111,14 +172,14 @@
       var d = state.drag; if (!d) return;
       var y = d.oy + (e.clientX - d.sx) / d.w * (Y1 - Y0);
       state.y = Math.max(Y0, Math.min(Y1, y));
-      state.seen[idxAt(state.y)] = true;
+      state.seen[nearest(state.y)] = true;
       render();
     });
     function endDrag() {
       if (!state.drag) return;
       state.drag = null;
       track.classList.remove('is-dragging');
-      goTo(nearest(state.y));
+      animateTo(nearest(state.y)); // glide back to the milestone; card settles with it
     }
     handle.addEventListener('pointerup', endDrag);
     handle.addEventListener('pointercancel', endDrag);
@@ -126,7 +187,7 @@
     // Clicking/tapping the line jumps to the nearest milestone
     track.addEventListener('pointerdown', function (e) {
       if (e.target === handle || handle.contains(e.target)) return;
-      goTo(nearest(yFromClientX(e.clientX)));
+      animateTo(nearest(yFromClientX(e.clientX)));
     });
 
     // Keyboard
@@ -134,8 +195,8 @@
       var k = e.key;
       if (k === 'ArrowLeft' || k === 'ArrowDown') { jump(-1); e.preventDefault(); }
       else if (k === 'ArrowRight' || k === 'ArrowUp') { jump(1); e.preventDefault(); }
-      else if (k === 'Home') { goTo(0); e.preventDefault(); }
-      else if (k === 'End') { goTo(LAST); e.preventDefault(); }
+      else if (k === 'Home') { animateTo(0); e.preventDefault(); }
+      else if (k === 'End') { animateTo(LAST); e.preventDefault(); }
     });
 
     prevBtn.addEventListener('click', function () { jump(-1); });

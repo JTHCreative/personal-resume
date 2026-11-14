@@ -73,24 +73,19 @@
 
   /* ---------- Timeline: milestone name above each dot, year below ---------- */
   var dots = [], yrs = [], names = [];
-  /* Job names lean into whichever side has more room; two names leaning into the same
-     stretch share it. Widths are a share of the line, so they scale with the screen. */
-  var DIR = {};
-  majors.forEach(function (mi, k) {
-    if (k === 0) DIR[mi] = 'r';
-    else if (k === majors.length - 1) DIR[mi] = 'l';
-    else DIR[mi] = (POS[majors[k + 1]] - POS[mi]) >= (POS[mi] - POS[majors[k - 1]]) ? 'r' : 'l';
-  });
+  /* Job names are centred over their dots. Each may be as wide as the shorter stretch
+     beside it (so neighbours never collide); the end names can overhang the arrow buttons.
+     Widths are a share of the line, so they scale with the screen. */
   function nameWidth(k) {
-    var mi = majors[k], nb = DIR[mi] === 'r' ? majors[k + 1] : majors[k - 1];
-    if (nb === undefined) return 10;
-    var gap = Math.abs(POS[nb] - POS[mi]);
-    var shared = DIR[mi] === 'r' ? DIR[nb] === 'l' : DIR[nb] === 'r';
-    return (shared ? gap / 2 : gap) / POS_MAX * 100;
+    var mi = majors[k], prev = majors[k - 1], next = majors[k + 1];
+    var gL = prev === undefined ? Infinity : POS[mi] - POS[prev];
+    var gR = next === undefined ? Infinity : POS[next] - POS[mi];
+    return Math.min(gL, gR) / POS_MAX * 100;
   }
   STOPS.forEach(function (s, i) {
     var pos = pct(i) + '%', major = isMajor(i);
-    var m = el('span', major ? 'ms ms--' + DIR[i] : 'ms ms--minor', s.short); m.style.left = pos;
+    var edge = i === 0 ? ' ms--first' : i === LAST ? ' ms--last' : '';
+    var m = el('span', major ? 'ms' + edge : 'ms ms--minor', s.short); m.style.left = pos;
     if (major) m.style.width = 'calc(' + nameWidth(majors.indexOf(i)).toFixed(3) + '% - 10px)';
     stopsEl.appendChild(m); names.push(m);
     var d = el('div', 'dot ' + (major ? 'dot--major' : 'dot--minor')); d.style.left = pos; stopsEl.appendChild(d); dots.push(d);
@@ -358,7 +353,6 @@
       yrs[i].classList.toggle('is-on', i === near);
       names[i].classList.toggle('is-on', i === near);
       names[i].classList.toggle('is-past', i < near);
-      names[i].classList.toggle('is-dim', !isMajor(near) && (i === PREV_MAJ[near] || i === NEXT_MAJ[near]));
     });
     handle.setAttribute('aria-valuemin', '0');
     handle.setAttribute('aria-valuemax', String(LAST));

@@ -24,7 +24,7 @@
   --wrap: 1040px;
   --gutter: 120px;
   --pad: 32px;          /* stage side padding */
-  --bar-h: 104px;
+  --bar-h: 140px;
   --side-w: 380px;
   --r-lg: 16px;
   --r-md: 10px;
@@ -33,6 +33,8 @@
 @media (max-width: 1280px) { :root { --gutter: 64px; --pad: 24px; --side-w: 340px; } }
 @media (max-width: 900px)  { :root { --bar-h: 140px; } }
 @media (max-width: 720px)  { :root { --bar-h: 158px; } }
+/* Tablets: names above the line need clear space below your name */
+@media (max-width: 900px) and (min-width: 721px) { :root { --bar-h: 172px; } .bar .bar__timeline { margin-top: 22px; } }
 @media (max-width: 720px)  { :root { --gutter: 16px; --pad: 16px; } }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -84,7 +86,7 @@ img { max-width: 100%; display: block; }
 }
 .step:hover, .btn:hover { background: var(--line); color: var(--fg); }
 .step:disabled { opacity: .35; cursor: default; background: var(--card-2); }
-.step--icon { width: 40px; min-height: 40px; padding: 0; font-size: 16px; flex: none; }
+.step--icon { width: 36px; height: 28px; min-height: 28px; padding: 0; font-size: 15px; flex: none; } /* short, so end names can sit above */
 .btn--primary { background: var(--primary); }
 .btn--primary:hover { background: var(--primary-hover); }
 .card { background: var(--card); border-radius: var(--r-lg); }
@@ -101,7 +103,7 @@ img { max-width: 100%; display: block; }
 .avatar--lg { width: 96px; height: 96px; font-size: 34px; margin-bottom: 28px; }
 
 /* ===== Fixed chrome ===== */
-.contact-fab { position: fixed; top: 30px; right: var(--pad); z-index: 40; box-shadow: 0 6px 18px var(--shadow); }
+.contact-fab { position: fixed; top: 48px; right: var(--pad); z-index: 40; box-shadow: 0 6px 18px var(--shadow); }
 
 .bar {
   position: fixed; inset: 0 0 auto 0; z-index: 30; height: var(--bar-h);
@@ -127,7 +129,7 @@ img { max-width: 100%; display: block; }
 .brand__text { display: flex; flex-direction: column; }
 .brand__name { font-family: var(--f-display); font-size: 20px; line-height: 24px; }
 .brand__role { font-family: var(--f-ui); font-size: 12px; line-height: 16px; color: var(--muted); }
-.bar__timeline { flex: 1; display: flex; align-items: center; gap: 20px; min-width: 0; }
+.bar__timeline { flex: 1; display: flex; align-items: center; gap: 20px; min-width: 0; margin-top: 22px; } /* room above for names and tags */
 
 /* Timeline track (in the bar) */
 .track { position: relative; flex: 1; height: 66px; touch-action: none; cursor: pointer; }
@@ -154,12 +156,11 @@ img { max-width: 100%; display: block; }
 }
 .ms { color: var(--muted-2); }
 .ms.is-on { color: var(--fg); }
-.ms.is-dim { opacity: .2; } /* neighbours step back while a key project's tag is showing */
 .ms { transition: color .2s, opacity .2s; }
 /* Key project names: a blue tag that pops up only while you're at that stop */
 .ms.ms--minor {
   width: auto; display: block; white-space: nowrap; z-index: 4;
-  bottom: calc(100% - 14px); padding: 2px 9px; border-radius: 999px;
+  bottom: calc(100% + 20px); padding: 2px 9px; border-radius: 999px; /* its own row, above the job names */
   background: var(--card-2); border: 1px solid var(--accent); color: var(--link);
   font-size: 11px; line-height: 15px;
   opacity: 0; transform: translate(-50%, 4px); transition: opacity .2s, transform .2s;
@@ -169,8 +170,7 @@ img { max-width: 100%; display: block; }
 .yr--minor { color: var(--link); opacity: 0; transition: opacity .2s; } /* key project years show only when reached */
 .yr--minor.is-on { opacity: 1; }
 .yr--minor:empty { display: none; }
-.ms.ms--r { transform: translateX(-6px); text-align: left; }                   /* reads rightwards from its dot */
-.ms.ms--l { transform: translateX(calc(-100% + 6px)); text-align: right; }      /* reads leftwards */
+
 .handle {
   position: absolute; left: 0; top: 16px;
   width: 36px; height: 36px; margin-left: -18px;
@@ -189,8 +189,8 @@ img { max-width: 100%; display: block; }
   .brand { padding-right: 130px; min-height: 40px; }
   .avatar--sm { width: 40px; height: 40px; font-size: 15px; }
   .brand__name { font-size: 18px; }
-  .bar__timeline { gap: 14px; }
-  .step--icon { width: 36px; min-height: 36px; }
+  .bar__timeline { gap: 14px; margin-top: 0; }
+  .ms.ms--minor { bottom: calc(100% - 14px); }
 }
 @media (max-width: 720px) {
   /* Give the line the full width so every job name fits */
@@ -200,8 +200,9 @@ img { max-width: 100%; display: block; }
   /* Too many stops for every name: show just the current one */
   .ms { font-size: 10px; line-height: 12px; opacity: 0; }
   .ms.is-on { opacity: 1; }
-  .ms.is-dim:not(.is-on) { opacity: 0; }
   .ms:not(.ms--minor) { width: max-content !important; max-width: 60vw; }
+  .ms.ms--first { transform: translateX(-6px); text-align: left; }
+  .ms.ms--last { transform: translateX(calc(-100% + 6px)); text-align: right; }
   .yr--minor { display: none; }
   .ms.ms--minor { font-size: 10px; line-height: 14px; }
 }

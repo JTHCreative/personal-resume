@@ -45,7 +45,7 @@ window.SITE = {
         { name: 'Product demos', note: 'Cerebrum hardware and software interfaces for sales demos and internal training' },
         { name: 'Go-live & hand-over', note: 'Carried customers from install through to support' }
       ],
-      clients: ['NBC', 'MLB Network', 'YES Network', 'Rogers Media', 'Dome Productions'],
+      clients: ['NBC', 'Facebook', 'MLB Network', 'YES Network', 'Rogers Media', 'Dome Productions'],
       tools: { interface: ['Cerebrum Designer', 'Hardware panels'], creative: [], systems: ['Cerebrum', 'Visio', 'Microsoft D365', 'IP Director', 'Neuron'] },
       cases: [
         { title: 'Routing panel builder', tag: 'Visual', img: 'assets/img/panel-builder.jpg',

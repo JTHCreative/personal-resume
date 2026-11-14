@@ -115,9 +115,10 @@ img { max-width: 100%; display: block; }
   position: relative; height: 100%;
   display: flex; align-items: center; gap: 32px;
   padding: 0 calc(var(--pad) + 140px) 0 var(--pad);
-  opacity: var(--bar-p, 0);
-  transform: translateY(calc((1 - var(--bar-p, 0)) * -16px));
 }
+/* The timeline fades in; the brand (photo, name, title) is revealed when the intro's copies land on it */
+.bar__timeline { opacity: var(--tl-p, 0); transform: translateY(calc((1 - var(--tl-p, 0)) * -16px)); }
+.brand [data-morph-to] { opacity: 0; } /* revealed by script.js as the intro copies land */
 .bar.is-live { pointer-events: auto; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--fg); flex: none; }
 .brand:hover { color: var(--fg); }
@@ -187,13 +188,18 @@ img { max-width: 100%; display: block; }
   position: absolute; inset: 0;
   display: flex; flex-direction: column; justify-content: center;
   padding: 96px var(--gutter) 72px;
-  opacity: calc(1 - var(--intro-p, 0));
-  transform: translateY(calc(var(--intro-p, 0) * -72px)) scale(calc(1 - var(--intro-p, 0) * .04));
-  transform-origin: 50% 0;
 }
+/* Everything except the photo, name and title fades up and away; those three fly to the header (script.js) */
+.intro__fade {
+  opacity: clamp(0, calc(1 - var(--intro-p, 0) * 1.8), 1);
+  transform: translateY(calc(var(--intro-p, 0) * -56px));
+}
+.scroll-cue.intro__fade { transform: translate(-50%, calc(var(--intro-p, 0) * 24px)); }
+.intro__role { margin: 0 0 28px; }
+.morph { position: relative; z-index: 35; transform-origin: 0 0; will-change: transform, opacity; } /* above the header while flying */
 .intro.is-gone { visibility: hidden; }
 .intro__inner { width: min(var(--wrap), 100%); margin-inline: auto; }
-.intro__name { margin: 12px 0 20px; font-family: var(--f-display); font-weight: 400; font-size: clamp(56px, 9vw, 112px); line-height: 1; letter-spacing: -.01em; }
+.intro__name { margin: 0 0 14px; font-family: var(--f-display); font-weight: 400; font-size: clamp(56px, 9vw, 112px); line-height: 1; letter-spacing: -.01em; }
 .intro__lede { margin: 0; font-size: clamp(22px, 2.3vw, 28px); line-height: 1.4; color: var(--fg); max-width: 34ch; }
 .intro__profile { margin: 16px 0 0; color: var(--body); max-width: 62ch; }
 .intro__meta { margin: 20px 0 0; font-family: var(--f-ui); font-size: 13px; color: var(--muted); }
@@ -350,7 +356,8 @@ img { max-width: 100%; display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   .is-new, .is-leaving, .scroll-cue svg, .drawer-toggle.is-pulse .drawer-toggle__n { animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
-  .intro, .stage, .collections, .bar__inner { transform: none !important; }
+  .intro__fade, .stage, .collections, .bar__timeline { transform: none !important; }
+  .scroll-cue.intro__fade { transform: translateX(-50%) !important; }
   .sidebar { transition: none; }
 }
 

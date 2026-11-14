@@ -153,6 +153,49 @@
   }
   viewer.addEventListener('click', function (e) { if (e.target === viewer) viewer.close(); });
 
+  /* ---------- Intro → header hand-off ----------
+     The photo, name and title on the intro glide and shrink into their places in the
+     header as the intro scrolls away, then cross-fade to the header's own copies. */
+  var morphs = ['avatar', 'name', 'role'].map(function (k) {
+    return { from: $('[data-morph="' + k + '"]'), to: $('[data-morph-to="' + k + '"]'), m: null };
+  });
+  function measureMorph() {
+    var stickyTop = intro.parentNode.getBoundingClientRect().top;
+    morphs.forEach(function (o) {
+      o.from.style.transform = 'none';
+      var a = o.from.getBoundingClientRect(), b = o.to.getBoundingClientRect();
+      if (!a.width) { o.m = { skip: true }; return; }        // not shown on this screen size
+      if (!b.width) { o.m = { fadeOnly: true }; return; }    // no room for it in the header here
+      var sc = o.to.classList.contains('avatar')
+        ? b.width / a.width
+        : parseFloat(getComputedStyle(o.to).fontSize) / parseFloat(getComputedStyle(o.from).fontSize);
+      var aTop = a.top - stickyTop;
+      o.m = { dx: b.left - a.left, dy: (b.top + b.height / 2 - a.height * sc / 2) - aTop, sc: sc };
+    });
+  }
+  function smooth(t) { return t * t * (3 - 2 * t); }
+  function renderMorph(q, barP) {
+    var m = smooth(clamp((q - 0.05) / 0.9));
+    var swap = clamp((m - 0.82) / 0.18);                   // cross-fade over the last stretch
+    morphs.forEach(function (o) {
+      var d = o.m; if (!d) return;
+      if (d.skip) { o.to.style.opacity = barP; return; }
+      if (d.fadeOnly) {
+        o.from.style.opacity = 1 - clamp(m / 0.5);
+        o.from.style.transform = reduceMotion ? 'none' : 'translateY(' + (-m * 40).toFixed(1) + 'px)';
+        return;
+      }
+      if (reduceMotion) {
+        o.from.style.opacity = 1 - clamp(q * 1.8);
+        o.to.style.opacity = barP;
+        return;
+      }
+      o.from.style.transform = 'translate(' + (d.dx * m).toFixed(1) + 'px,' + (d.dy * m).toFixed(1) + 'px) scale(' + (1 + (d.sc - 1) * m).toFixed(4) + ')';
+      o.from.style.opacity = 1 - swap;
+      o.to.style.opacity = swap;
+    });
+  }
+
   /* ---------- Scroll ↔ timeline mapping ----------
      The story section is tall; its contents stay pinned while you scroll through it.
      First stretch of scroll = intro fading away. Then each gap between milestones gets
@@ -170,6 +213,7 @@
     L.length = L.intro + (N - 1) * L.seg + Math.round(vh * 0.4);
     story.style.height = (vh + L.length) + 'px';
     L.top = story.offsetTop;
+    measureMorph();
   }
   function yFromT(t) {
     var i = Math.min(Math.floor(t), N - 2), f = t - i;
@@ -233,6 +277,9 @@
     setP(intro, '--intro-p', q);
     var barP = clamp((q - 0.45) / 0.45), stageP = clamp((q - 0.55) / 0.4), collP = clamp((q - 0.75) / 0.25);
     setP(bar, '--bar-p', barP);
+    // On phones the name flies up through the timeline row, so the timeline waits until it has passed
+    setP(bar, '--tl-p', mobileMq.matches ? clamp((q - 0.8) / 0.2) : barP);
+    renderMorph(q, barP);
     setP(stage, '--stage-p', stageP);
     setP(collections, '--coll-p', collP);
     intro.classList.toggle('is-gone', q >= 1);
@@ -375,4 +422,5 @@
   collect(-1);
   frame();
   window.addEventListener('load', function () { layout(true); frame(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(true); frame(); }); // text sizes change once web fonts load
 })();

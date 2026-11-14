@@ -25,10 +25,10 @@
   <header class="bar" data-bar>
     <div class="bar__inner">
       <a class="brand" href="#top" aria-label="Back to the start">
-        <span class="avatar avatar--sm" data-avatar></span>
+        <span class="avatar avatar--sm" data-avatar data-morph-to="avatar"></span>
         <span class="brand__text">
-          <span class="brand__name" data-name></span>
-          <span class="brand__role" data-role></span>
+          <span class="brand__name" data-name data-morph-to="name"></span>
+          <span class="brand__role" data-role data-morph-to="role"></span>
         </span>
       </a>
 
@@ -55,19 +55,19 @@
         <!-- 1. Intro -->
         <section class="intro" data-intro aria-labelledby="intro-name">
           <div class="intro__inner">
-            <span class="avatar avatar--lg" data-avatar></span>
-            <p class="eyebrow" data-role></p>
-            <h1 class="intro__name" id="intro-name" data-name></h1>
-            <p class="intro__lede">I design, build and support the operator interfaces that live broadcast relies on, for control rooms where speed and reliability matter most.</p>
-            <p class="intro__profile">Over ten years inside live production (cameras, replay, routing), now shipping custom operator interfaces for facilities where speed and reliability are critical. I stay with the user the whole way: planning with operators, modelling workflows, designing and coding the interfaces, and supporting them on air.</p>
-            <dl class="stats">
+            <span class="avatar avatar--lg morph" data-avatar data-morph="avatar"></span>
+            <h1 class="intro__name morph" id="intro-name" data-name data-morph="name"></h1>
+            <p class="eyebrow intro__role morph" data-role data-morph="role"></p>
+            <p class="intro__lede intro__fade">I design, build and support the operator interfaces that live broadcast relies on, for control rooms where speed and reliability matter most.</p>
+            <p class="intro__profile intro__fade">Over ten years inside live production (cameras, replay, routing), now shipping custom operator interfaces for facilities where speed and reliability are critical. I stay with the user the whole way: planning with operators, modelling workflows, designing and coding the interfaces, and supporting them on air.</p>
+            <dl class="stats intro__fade">
               <div><dt>Years live</dt><dd>11</dd></div>
               <div><dt>Facilities</dt><dd>15+</dd></div>
               <div><dt>UX cert</dt><dd>2025</dd></div>
             </dl>
-            <p class="intro__meta">Millbrae, CA · Hybrid / remote</p>
+            <p class="intro__meta intro__fade">Millbrae, CA · Hybrid / remote</p>
           </div>
-          <div class="scroll-cue" aria-hidden="true">
+          <div class="scroll-cue intro__fade" aria-hidden="true">
             <span>Scroll to start the timeline</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
           </div>

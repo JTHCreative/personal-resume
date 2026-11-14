@@ -344,7 +344,7 @@ img { max-width: 100%; display: block; }
 }
 .slot-inv.is-filled {
   border: 1px solid rgba(var(--inv-rgb), .9);
-  background: linear-gradient(160deg, rgba(var(--inv-rgb), .32), rgba(var(--inv-rgb), .12));
+  background: rgba(var(--inv-rgb), .22); /* flat fill in the group's colour */
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .04), 0 0 12px rgba(var(--inv-rgb), .12);
 }
 .slot-inv.is-filled .slot-inv__plus { display: none; }

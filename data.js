@@ -83,7 +83,7 @@ window.SITE = {
       // PLACEHOLDER body: replace with what the project was
       body: 'Shaped the system architecture around Riot Games’ requirements, from design drawings to the Cerebrum interfaces behind it.',
       projects: [],
-      clients: [],
+      clients: ['Riot Games'],
       tools: { interface: [], creative: [], systems: [] },
       cases: []
     },

@@ -1,0 +1,12 @@
+# Cloudflare Pages reads this file and adds these headers to matching responses.
+# "no-cache" lets browsers keep a copy, but they must ask the server whether it changed
+# before reusing it (a quick check when nothing changed). This stops visitors seeing a new
+# page with old styles or scripts after an update.
+/*.html
+  Cache-Control: no-cache
+/*.css
+  Cache-Control: no-cache
+/*.js
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache

@@ -45,6 +45,12 @@ window shows, in order: `problem`, `philosophy` (linked to Observe, Reduce or Im
 `solution` pages, as many of each as the story needs. The format is described at the top
 of `data.js`.
 
+## Publish with Cloudflare Pages
+
+Cloudflare Pages deploys from the repo with no build step (build command `exit 0`, output
+directory `/`). `_headers` tells browsers to check for updated HTML, CSS and JS before
+reusing a saved copy, so visitors see changes right away.
+
 ## Publish with GitHub Pages
 
 Deployment is automated by `.github/workflows/deploy.yml`: every push to `main`

@@ -43,17 +43,19 @@
       </div>
     </section>
 
-    <!-- The multiviewer: programme window + source tiles -->
+    <!-- The multiviewer page: 12 equal inputs, each with an under-monitor label (UMD) -->
     <section class="wall" aria-label="Projects">
-      <div class="pgm" data-pgm>
-        <div class="pgm__screen" data-pgm-screen></div>
-        <div class="umd umd--pgm"><span class="umd__tally"></span><span class="umd__src">PGM</span><span data-pgm-label></span></div>
-      </div>
+      <div class="wall__bar" aria-hidden="true"><span>Multiviewer · Page 1</span><span data-wall-count></span></div>
       <div class="sources" role="tablist" aria-label="Choose a project" data-sources></div>
     </section>
 
-    <!-- The selected project's story -->
+    <!-- The selected project: programme monitor + its story -->
     <article class="story" data-story aria-live="polite" tabindex="-1">
+      <div class="pgm" data-pgm>
+        <div class="pgm__screen" data-pgm-screen></div>
+        <div class="umd umd--pgm"><span class="umd__tally"></span><span class="umd__src">PGM</span><span class="umd__name" data-pgm-label></span></div>
+      </div>
+      <div class="story__body">
       <header class="story__head">
         <div>
           <span class="tag" data-s-tag></span>
@@ -76,6 +78,7 @@
           <a class="btn btn--primary" data-email></a>
           <a class="btn" data-linkedin target="_blank" rel="noopener">LinkedIn ↗</a>
         </div>
+      </div>
       </div>
     </article>
 

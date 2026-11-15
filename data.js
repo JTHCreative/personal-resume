@@ -114,14 +114,14 @@ window.SITE = {
         { id: 'proc-control', title: 'Proc Control', tag: 'Modular', img: 'assets/img/proc-control.jpg',
           blurb: 'Designed for different formats and platforms, and built from pinnable modules so each operator can assemble their own custom dashboard.',
           // DRAFT gallery story: written from the blurb above, edit with the real details
-          role: 'UX, UI & build · Technical Architect',
+          role: 'UX, UI & build',
           problem: 'Processing control had to work across different formats and platforms, and every operator watches a different set of signals. One fixed screen could not suit them all.',
           solution: 'I broke the interface into pinnable modules. Each operator assembles the dashboard they need from the same building blocks, and the layout adapts to the format and platform it runs on.',
           result: 'One interface that every operator can make their own, instead of a different build for each desk.' },
         { id: 'config-guide', title: 'System configuration guide', tag: 'Human-centred', img: 'assets/img/config-tool.jpg',
           blurb: 'A configuration tool that doubles as a helper, pointing the user in the right direction and offering a hand through each step.',
           // DRAFT gallery story: written from the blurb above, edit with the real details
-          role: 'UX, UI & build · Technical Architect',
+          role: 'UX, UI & build',
           problem: 'Configuring the system was a long list of settings with no sense of order. New users did not know where to start, and mistakes only showed up later, on air.',
           solution: 'I designed the tool as a guide as well as a form. It points to the next step, explains what each setting does in plain words, and offers a hand at the points where people used to get stuck.',
           result: 'Configuration that new users can complete on their own, with fewer mistakes reaching the live show.' }

@@ -109,13 +109,19 @@ img { max-width: 100%; display: block; }
 .rail__step:hover:not(:disabled) { background: var(--accent); color: #fff; }
 .rail__step:disabled { border-color: var(--line); background: var(--panel); color: var(--fg); opacity: .3; cursor: default; }
 .sources {
-  position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px;
-  overflow-y: auto; overscroll-behavior: contain; scroll-snap-type: y proximity; scroll-padding: 3px; scrollbar-width: none; padding: 3px; margin: 0 -3px;
+  position: relative; flex: 1; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 3px; margin: 0 -3px;
+  cursor: grab; touch-action: none; /* drags are handled in gallery.js (momentum + rubber banding) */
+  -webkit-user-select: none; user-select: none;
 }
 .sources::-webkit-scrollbar { display: none; }
+/* the tiles sit on a track that stretches past either end while being pulled */
+.sources__track { display: flex; flex-direction: column; gap: 8px; }
+.sources.is-grabbing, .sources.is-grabbing * { cursor: grabbing !important; }
+.src img { -webkit-user-drag: none; }
 .src {
   position: relative; flex: none; display: flex; flex-direction: column; min-width: 0; padding: 0; border: 0; border-radius: 3px; overflow: hidden;
-  background: #000; color: var(--fg); cursor: pointer; text-align: left; font: inherit; scroll-snap-align: start;
+  background: #000; color: var(--fg); cursor: pointer; text-align: left; font: inherit;
   box-shadow: 0 0 0 1px #1C1C22;
 }
 /* tally border drawn inside the tile */
@@ -131,7 +137,7 @@ img { max-width: 100%; display: block; }
 .src.is-pgm .umd__tally, .src.is-pgm:hover .umd__tally { background: var(--red); box-shadow: 0 0 10px rgba(233, 80, 71, .7); }
 .src--open .src__shot { opacity: .6; transition: opacity .2s; }
 .src--open:hover .src__shot, .src--open.is-pgm .src__shot { opacity: 1; }
-.src--empty { cursor: default; }
+.src--empty { cursor: grab; }
 .src--empty .src__shot { background: radial-gradient(ellipse at center, #121218, #000 75%); }
 .src__nosig { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--f-mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: #4A4A55; }
 .src--empty .umd { color: #4A4A55; }
@@ -248,7 +254,8 @@ img { max-width: 100%; display: block; }
   .rail__inner { position: static; flex-direction: row; align-items: stretch; }
   .rail__step { width: 30px; height: auto; }
   .rail__step svg { transform: rotate(-90deg); }
-  .sources { flex-direction: row; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; margin: -3px 0; }
+  .sources { overflow-x: auto; overflow-y: hidden; margin: -3px 0; touch-action: pan-y; } /* the page can still scroll up and down */
+  .sources__track { flex-direction: row; }
   .src { width: calc((100% - 16px) / 3); }
   .pgm__screen { aspect-ratio: auto; height: 600px; }
   .page { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 20px; padding: 64px 24px 84px; }

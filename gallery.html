@@ -11,7 +11,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%2327272F'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-size='26' fill='%23F1F2F3'%3EJH%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;1,400&family=Crimson+Pro:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;1,400&family=Crimson+Pro:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap">
   <link rel="stylesheet" href="gallery.css?v=__V__">
 </head>
 <body>
@@ -35,7 +35,7 @@
       <div>
         <p class="eyebrow">Path 02 · Design gallery</p>
         <h1 id="g-title" class="intro__title">Projects, <em>on air.</em></h1>
-        <p class="intro__lede">In a control room, the director watches every source on a wall of monitors and puts one on air. Do the same here: pick a project from the wall to see the problem behind it and how I solved it.</p>
+        <p class="intro__lede">In a control room, the director watches every source on a wall of monitors and puts one on air. Do the same here: pick a project from the wall, then page through the problem, the thinking behind it and how I solved it.</p>
       </div>
       <div class="status" aria-hidden="true">
         <span class="status__live"><i></i>On air</span>
@@ -43,44 +43,41 @@
       </div>
     </section>
 
-    <!-- The multiviewer page: 12 equal inputs, each with an under-monitor label (UMD) -->
+    <!-- The multiviewer: a scrolling rail of inputs on the left, the programme window on the right -->
     <section class="wall" aria-label="Projects">
       <div class="wall__bar" aria-hidden="true"><span>Multiviewer · Page 1</span><span data-wall-count></span></div>
-      <div class="sources" role="tablist" aria-label="Choose a project" data-sources></div>
-    </section>
+      <div class="wall__body">
+        <div class="rail">
+          <div class="rail__inner">
+            <button class="rail__step" type="button" data-rail-step="-1" aria-label="Scroll the project list up">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+            </button>
+            <div class="sources" role="tablist" aria-label="Choose a project" aria-orientation="vertical" data-sources></div>
+            <button class="rail__step" type="button" data-rail-step="1" aria-label="Scroll the project list down">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+        </div>
 
-    <!-- The selected project: programme monitor + its story -->
-    <article class="story" data-story aria-live="polite" tabindex="-1">
-      <div class="pgm" data-pgm>
-        <div class="pgm__screen" data-pgm-screen></div>
-        <div class="umd umd--pgm"><span class="umd__tally"></span><span class="umd__src">PGM</span><span class="umd__name" data-pgm-label></span></div>
-      </div>
-      <div class="story__body">
-      <header class="story__head">
-        <div>
-          <span class="tag" data-s-tag></span>
-          <h2 class="story__title" data-s-title></h2>
-          <p class="story__meta" data-s-meta></p>
-        </div>
-        <div class="story__nav">
-          <button class="cut" type="button" data-prev aria-label="Previous project">◀</button>
-          <button class="cut cut--take" type="button" data-next>Next project <span aria-hidden="true">▶</span></button>
-        </div>
-      </header>
-      <div class="story__grid" data-s-grid>
-        <section class="beat"><h3 class="beat__label"><span>01</span> The problem</h3><p data-s-problem></p></section>
-        <section class="beat"><h3 class="beat__label"><span>02</span> How I solved it</h3><p data-s-solution></p></section>
-        <section class="beat beat--result"><h3 class="beat__label"><span>03</span> The result</h3><p data-s-result></p></section>
-      </div>
-      <div class="story__open" data-s-open hidden>
-        <p>This channel is waiting for a signal. If you have an interface that operators struggle with, or a new tool that needs to be simple from day one, I&rsquo;d love to hear about it.</p>
-        <div class="story__actions">
-          <a class="btn btn--primary" data-email></a>
-          <a class="btn" data-linkedin target="_blank" rel="noopener">LinkedIn ↗</a>
+        <div class="pgm" id="pgm" role="tabpanel" aria-roledescription="project slideshow" data-pgm>
+          <div class="pgm__screen" data-screen>
+            <div class="pgm__top">
+              <span class="pgm__section" data-section aria-live="polite"></span>
+              <div class="dots" role="group" aria-label="Pages" data-dots></div>
+              <span class="pgm__count" data-count aria-hidden="true"></span>
+            </div>
+            <div class="pages" data-pages></div>
+            <button class="arrow arrow--prev" type="button" data-page-step="-1" aria-label="Previous page">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="arrow arrow--next" type="button" data-page-step="1" aria-label="Next page">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="umd umd--pgm"><span class="umd__tally"></span><span class="umd__src">PGM</span><span class="umd__name" data-pgm-label></span><span class="umd__tag" data-pgm-tag></span></div>
         </div>
       </div>
-      </div>
-    </article>
+    </section>
 
     <section class="next" aria-labelledby="next-title">
       <h2 id="next-title" class="next__title">Behind the work</h2>

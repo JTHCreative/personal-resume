@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design gallery · Justin Hui</title>
+  <meta name="description" content="Operator interfaces Justin Hui has designed and shipped for live broadcast, and how each problem was solved.">
+  <meta property="og:title" content="Design gallery · Justin Hui">
+  <meta property="og:description" content="Operator interfaces for live broadcast: the problem, the solution and the result.">
+  <meta name="theme-color" content="#0B0B0F">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%2327272F'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-size='26' fill='%23F1F2F3'%3EJH%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;1,400&family=Crimson+Pro:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="gallery.css?v=__V__">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <a class="top__brand" href="index.html" aria-label="Back to the path selector">
+      <span class="avatar" data-avatar></span>
+      <span data-name></span>
+    </a>
+    <nav class="paths-nav" aria-label="Paths">
+      <a href="philosophy.html"><span>01</span> Philosophy</a>
+      <a href="gallery.html" aria-current="page"><span>02</span> Gallery</a>
+      <a href="index.html#journey"><span>03</span> Journey</a>
+    </nav>
+    <a class="btn btn--primary top__contact" href="#contact">Contact me</a>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="intro" aria-labelledby="g-title">
+      <div>
+        <p class="eyebrow">Path 02 · Design gallery</p>
+        <h1 id="g-title" class="intro__title">Projects, <em>on air.</em></h1>
+        <p class="intro__lede">In a control room, the director watches every source on a wall of monitors and puts one on air. Do the same here: pick a project from the wall to see the problem behind it and how I solved it.</p>
+      </div>
+      <div class="status" aria-hidden="true">
+        <span class="status__live"><i></i>On air</span>
+        <span class="status__tc" data-tc>00:00:00:00</span>
+      </div>
+    </section>
+
+    <!-- The multiviewer: programme window + source tiles -->
+    <section class="wall" aria-label="Projects">
+      <div class="pgm" data-pgm>
+        <div class="pgm__screen" data-pgm-screen></div>
+        <div class="umd umd--pgm"><span class="umd__tally"></span><span class="umd__src">PGM</span><span data-pgm-label></span></div>
+      </div>
+      <div class="sources" role="tablist" aria-label="Choose a project" data-sources></div>
+    </section>
+
+    <!-- The selected project's story -->
+    <article class="story" data-story aria-live="polite" tabindex="-1">
+      <header class="story__head">
+        <div>
+          <span class="tag" data-s-tag></span>
+          <h2 class="story__title" data-s-title></h2>
+          <p class="story__meta" data-s-meta></p>
+        </div>
+        <div class="story__nav">
+          <button class="cut" type="button" data-prev aria-label="Previous project">◀</button>
+          <button class="cut cut--take" type="button" data-next>Next project <span aria-hidden="true">▶</span></button>
+        </div>
+      </header>
+      <div class="story__grid" data-s-grid>
+        <section class="beat"><h3 class="beat__label"><span>01</span> The problem</h3><p data-s-problem></p></section>
+        <section class="beat"><h3 class="beat__label"><span>02</span> How I solved it</h3><p data-s-solution></p></section>
+        <section class="beat beat--result"><h3 class="beat__label"><span>03</span> The result</h3><p data-s-result></p></section>
+      </div>
+      <div class="story__open" data-s-open hidden>
+        <p>This channel is waiting for a signal. If you have an interface that operators struggle with, or a new tool that needs to be simple from day one, I&rsquo;d love to hear about it.</p>
+        <div class="story__actions">
+          <a class="btn btn--primary" data-email></a>
+          <a class="btn" data-linkedin target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+    </article>
+
+    <section class="next" aria-labelledby="next-title">
+      <h2 id="next-title" class="next__title">Behind the work</h2>
+      <div class="next__grid">
+        <a class="next__card next__card--philosophy" href="philosophy.html"><span class="next__n">01</span><span class="next__t">Design philosophy</span><span class="next__d">The habits behind these projects, with live demos.</span><span class="next__go">→</span></a>
+        <a class="next__card next__card--journey" href="index.html#journey"><span class="next__n">03</span><span class="next__t">Design journey</span><span class="next__d">When and where each project happened, on the timeline.</span><span class="next__go">→</span></a>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <p class="eyebrow">Now · Looking for</p>
+      <h2 id="contact-title" class="next__title">A UI / UX design role</h2>
+      <p>Simple, clean interfaces anyone can pick up without training. Hybrid or remote from Millbrae, CA.</p>
+      <div class="story__actions">
+        <a class="btn btn--primary" data-email></a>
+        <a class="btn" data-linkedin target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <span>© <span data-yr>2026</span> <span data-name></span></span>
+    <span>Millbrae, CA</span>
+  </footer>
+
+  <script src="data.js?v=__V__"></script>
+  <script src="common.js?v=__V__"></script>
+  <script src="gallery.js?v=__V__"></script>
+</body>
+</html>

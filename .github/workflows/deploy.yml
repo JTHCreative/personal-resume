@@ -32,8 +32,8 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Stamp file versions
-        # Adds the commit id to the CSS/JS links so browsers fetch fresh copies after each deploy
-        run: sed -i "s/__V__/${GITHUB_SHA::7}/g" index.html
+        # Adds the commit id to the CSS/JS links in every page so browsers fetch fresh copies after each deploy
+        run: sed -i "s/__V__/${GITHUB_SHA::7}/g" *.html
 
       - name: Package the site
         uses: actions/upload-pages-artifact@v4

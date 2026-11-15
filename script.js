@@ -266,6 +266,8 @@
     $('[data-viewer-title]', viewer).textContent = c.title;
     $('[data-viewer-blurb]', viewer).textContent = c.blurb || '';
     $('[data-viewer-when]', viewer).textContent = STOPS[c.stop].when + ' · ' + STOPS[c.stop].title;
+    var more = $('[data-viewer-more]', viewer);
+    more.hidden = !c.id; if (c.id) more.href = 'gallery.html#' + c.id;
     if (viewer.showModal) viewer.showModal(); else viewer.setAttribute('open', '');
   }
   viewer.addEventListener('click', function (e) { if (e.target === viewer) viewer.close(); });
@@ -523,6 +525,10 @@
   });
   prevBtn.addEventListener('click', function () { step(-1); });
   nextBtn.addEventListener('click', function () { step(1); });
+  // The "Design journey" door on the path selector: glide down to the first milestone
+  $$('[data-journey]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); goToStop(0); });
+  });
   $('.brand').addEventListener('click', function (e) {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
@@ -633,7 +639,11 @@
   fillCard(0);
   collect(-1);
   frame();
-  window.addEventListener('load', function () { layout(true); fitNames(); frame(); });
+  window.addEventListener('load', function () {
+    layout(true); fitNames(); frame();
+    // Arriving from another page's "Design journey" link: start at the first milestone
+    if (location.hash === '#journey') { window.scrollTo({ top: scrollForStop(0), behavior: 'auto' }); frame(); }
+  });
   window.addEventListener('resize', fitNames);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(true); fitNames(); frame(); }); // text sizes change once web fonts load
 })();

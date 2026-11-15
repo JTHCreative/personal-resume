@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Justin Hui · Interface Designer</title>
-  <meta name="description" content="Justin Hui designs, builds and supports operator interfaces for live broadcast facilities. Senior Technical Architect at EVS, Google UX certified, based in Millbrae, CA.">
+  <meta name="description" content="Choose a path: design philosophy, design gallery or design journey. Justin Hui designs, builds and supports operator interfaces for live broadcast facilities. Senior Technical Architect at EVS, Google UX certified, based in Millbrae, CA.">
   <meta property="og:title" content="Justin Hui · Interface Designer">
   <meta property="og:description" content="Operator interfaces for live broadcast, designed, deployed and supported.">
   <meta property="og:type" content="website">
@@ -52,23 +52,80 @@
     <div class="story" id="top" data-story>
       <div class="story__sticky">
 
-        <!-- 1. Intro -->
+        <!-- 1. Intro: the path selector -->
         <section class="intro" data-intro aria-labelledby="intro-name">
           <div class="intro__inner">
-            <span class="avatar avatar--lg morph" data-avatar data-morph="avatar"></span>
-            <h1 class="intro__name morph" id="intro-name" data-name data-morph="name"></h1>
-            <p class="eyebrow intro__role morph" data-role data-morph="role"></p>
-            <p class="intro__lede intro__fade">I design, build and support the operator interfaces that live broadcast relies on, for control rooms where speed and reliability matter most.</p>
-            <p class="intro__profile intro__fade">Over ten years inside live production (cameras, replay, routing), now shipping custom operator interfaces for facilities where speed and reliability are critical. I stay with the user the whole way: planning with operators, modelling workflows, designing and coding the interfaces, and supporting them on air.</p>
-            <dl class="stats intro__fade">
-              <div><dt>Years live</dt><dd>11</dd></div>
-              <div><dt>Facilities</dt><dd>15+</dd></div>
-              <div><dt>UX cert</dt><dd>2025</dd></div>
-            </dl>
-            <p class="intro__meta intro__fade">Millbrae, CA · Hybrid / remote</p>
+            <div class="intro__id">
+              <span class="avatar avatar--lg morph" data-avatar data-morph="avatar"></span>
+              <div class="intro__who">
+                <h1 class="intro__name morph" id="intro-name" data-name data-morph="name"></h1>
+                <p class="eyebrow intro__role morph" data-role data-morph="role"></p>
+              </div>
+            </div>
+            <p class="intro__lede intro__fade">I design, build and support the operator interfaces live broadcast relies on. Pick a path to see how.</p>
+
+            <nav class="paths intro__fade" aria-label="Choose a path">
+              <a class="path path--philosophy" href="philosophy.html">
+                <span class="path__art" aria-hidden="true">
+                  <svg viewBox="0 0 200 90" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="34" y="22" width="132" height="46" rx="6" stroke="#1D1D24" stroke-width="2"/>
+                    <rect x="46" y="34" width="30" height="22" rx="3" fill="#1D1D24"/>
+                    <rect x="85" y="34" width="30" height="22" rx="3" stroke="#1D1D24" stroke-width="2"/>
+                    <rect x="124" y="34" width="30" height="22" rx="3" stroke="#1D1D24" stroke-width="2"/>
+                    <path class="path__pen" d="M118 30c-10-14 30-16 40-4 9 12-4 34-26 34-18 0-22-16-14-30z" stroke="#D8412F" stroke-width="2.2"/>
+                    <path class="path__pen" d="M164 18l14-10" stroke="#D8412F" stroke-width="2.2"/>
+                  </svg>
+                </span>
+                <span class="path__num">01</span>
+                <span class="path__text">
+                  <span class="path__title">Design philosophy</span>
+                  <span class="path__desc">The principles and techniques I design by, shown with live demos.</span>
+                </span>
+                <span class="path__go" aria-hidden="true">→</span>
+              </a>
+
+              <a class="path path--gallery" href="gallery.html">
+                <span class="path__art" aria-hidden="true">
+                  <span class="mv">
+                    <span class="mv__tile mv__tile--pgm"><img src="assets/img/proc-control.jpg" alt=""></span>
+                    <span class="mv__tile mv__tile--pvw"><img src="assets/img/panel-builder.jpg" alt=""></span>
+                    <span class="mv__tile"><img src="assets/img/config-tool.jpg" alt=""></span>
+                    <span class="mv__tile mv__tile--bars"></span>
+                  </span>
+                </span>
+                <span class="path__num">02</span>
+                <span class="path__text">
+                  <span class="path__title">Design gallery</span>
+                  <span class="path__desc">Projects I&rsquo;ve shipped, and how I solved the problem behind each one.</span>
+                </span>
+                <span class="path__go" aria-hidden="true">→</span>
+              </a>
+
+              <a class="path path--journey" href="#journey" data-journey>
+                <span class="path__art" aria-hidden="true">
+                  <svg viewBox="0 0 200 90" fill="none">
+                    <line x1="16" y1="50" x2="184" y2="50" stroke="#454550" stroke-width="2"/>
+                    <line class="path__fill" x1="16" y1="50" x2="104" y2="50" stroke="#5B97E6" stroke-width="2"/>
+                    <circle cx="20" cy="50" r="6" fill="#FDAE00"/>
+                    <circle cx="62" cy="50" r="6" fill="#FDAE00"/>
+                    <circle cx="84" cy="50" r="3.5" fill="#5B97E6"/>
+                    <circle cx="126" cy="50" r="3.5" fill="#5E5E68"/>
+                    <circle cx="146" cy="50" r="6" fill="#1D1D24" stroke="#FDAE00" stroke-opacity=".5" stroke-width="2"/>
+                    <circle cx="180" cy="50" r="6" fill="#1D1D24" stroke="#FDAE00" stroke-opacity=".5" stroke-width="2"/>
+                    <g class="path__handle"><circle cx="104" cy="50" r="12" fill="#F1F2F3"/><path d="M99 46l-4 4 4 4M109 46l4 4-4 4" stroke="#1D1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+                  </svg>
+                </span>
+                <span class="path__num">03</span>
+                <span class="path__text">
+                  <span class="path__title">Design journey</span>
+                  <span class="path__desc">Eleven years, from the control room to the drawing board. Scroll down to travel it.</span>
+                </span>
+                <span class="path__go" aria-hidden="true">↓</span>
+              </a>
+            </nav>
           </div>
           <div class="scroll-cue intro__fade" aria-hidden="true">
-            <span>Scroll to start the timeline</span>
+            <span>Or scroll to start the journey</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
           </div>
         </section>
@@ -140,16 +197,25 @@
 
     <!-- After the timeline -->
     <div id="after">
-      <section class="section wrap" id="approach" aria-labelledby="approach-title">
+      <section class="section wrap" id="more" aria-labelledby="more-title">
         <div class="section__head">
-          <p class="eyebrow">Approach</p>
-          <h2 id="approach-title" class="h-display">How I work</h2>
+          <p class="eyebrow">Keep exploring</p>
+          <h2 id="more-title" class="h-display">Two more paths</h2>
         </div>
-        <ol class="approach">
-          <li class="card"><span class="approach__num">01</span><h3 class="h-card">Observe</h3><p>Design is solving a problem with style. Understand the user's problem, then make the solution fun to use.</p></li>
-          <li class="card"><span class="approach__num">02</span><h3 class="h-card">Reduce</h3><p>Simplify. Every element earns its space. Speed is king: break complex workflows down into simple interactions.</p></li>
-          <li class="card"><span class="approach__num">03</span><h3 class="h-card">Improve</h3><p>Delivery is just the beginning. Support what has been designed and relentlessly improve it with customer feedback.</p></li>
-        </ol>
+        <div class="more">
+          <a class="card more__card more__card--philosophy" href="philosophy.html">
+            <span class="approach__num">01</span>
+            <span class="h-card">Design philosophy</span>
+            <span class="more__desc">How I think about design: Observe, Reduce, Improve, with live demos.</span>
+            <span class="more__go">Open the sketchbook →</span>
+          </a>
+          <a class="card more__card more__card--gallery" href="gallery.html">
+            <span class="approach__num">02</span>
+            <span class="h-card">Design gallery</span>
+            <span class="more__desc">The interfaces I&rsquo;ve shipped and the problems behind them.</span>
+            <span class="more__go">Go to the monitor wall →</span>
+          </a>
+        </div>
       </section>
 
       <section class="section wrap" id="school" aria-labelledby="school-title">
@@ -204,6 +270,7 @@
       <h2 class="h-card" id="viewer-title" data-viewer-title></h2>
       <p data-viewer-blurb></p>
       <span class="meta" data-viewer-when></span>
+      <a class="viewer__more" data-viewer-more hidden>Read the full case study in the gallery →</a>
     </div>
   </dialog>
 

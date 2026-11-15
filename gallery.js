@@ -1,6 +1,7 @@
-/* Design gallery: a multiviewer. Every case study in data.js that has an `id` becomes a
-   source tile; choosing one "takes" it to the programme window and shows its story.
-   The last tile is an open channel (colour bars) inviting the next project. */
+/* Design gallery: a multiviewer page of 12 equal inputs, each with an under-monitor label (UMD).
+   Every case study in data.js that has an `id` fills the next input; then comes an open channel
+   (colour bars) inviting the next project, and any inputs left over show "No signal".
+   Choosing a project "takes" it to the programme monitor and shows its story. */
 (function () {
   'use strict';
   var SITE = window.SITE;
@@ -17,6 +18,8 @@
 
   var sourcesEl = $('[data-sources]'), screen = $('[data-pgm-screen]'), pgmLabel = $('[data-pgm-label]');
   var storyEl = $('[data-story]');
+  var COLS = 4, CHANNELS = Math.max(12, Math.ceil(PROJECTS.length / COLS) * COLS);
+  function ch(n) { return String(n).padStart(2, '0'); }
   var tiles = PROJECTS.map(function (p, i) {
     var b = el('button', 'src' + (p.open ? ' src--open' : ''));
     b.type = 'button'; b.id = 'src-' + p.id;
@@ -27,7 +30,7 @@
     b.appendChild(shot);
     var umd = el('span', 'umd');
     umd.appendChild(el('span', 'umd__tally'));
-    umd.appendChild(el('span', 'umd__src', String(i + 1).padStart(2, '0')));
+    umd.appendChild(el('span', 'umd__src', ch(i + 1)));
     umd.appendChild(el('span', 'umd__name', p.title));
     b.appendChild(umd);
     b.addEventListener('click', function () { take(i, true); });
@@ -40,6 +43,16 @@
     sourcesEl.appendChild(b);
     return b;
   });
+  // Spare inputs: nothing plugged in yet
+  for (var n = PROJECTS.length + 1; n <= CHANNELS; n++) {
+    var e = el('div', 'src src--empty'); e.setAttribute('aria-hidden', 'true');
+    var sh = el('span', 'src__shot'); sh.appendChild(el('span', 'src__nosig', 'No signal')); e.appendChild(sh);
+    var u = el('span', 'umd');
+    u.appendChild(el('span', 'umd__tally')); u.appendChild(el('span', 'umd__src', ch(n))); u.appendChild(el('span', 'umd__name', 'Input ' + ch(n)));
+    e.appendChild(u);
+    sourcesEl.appendChild(e);
+  }
+  $('[data-wall-count]').textContent = (PROJECTS.length - 1) + ' projects · ' + CHANNELS + ' inputs';
   storyEl.id = 'story';
 
   var cur = -1;
@@ -67,7 +80,7 @@
     // The story underneath
     $('[data-s-tag]').textContent = p.tag || '';
     $('[data-s-title]').textContent = p.title;
-    $('[data-s-meta]').textContent = p.open ? 'Channel ' + String(i + 1).padStart(2, '0') + ' · Next' : [p.when, p.at, p.role].filter(Boolean).join(' · ');
+    $('[data-s-meta]').textContent = p.open ? 'Channel ' + ch(i + 1) + ' · Next' : [p.when, p.at, p.role].filter(Boolean).join(' · ');
     $('[data-s-problem]').textContent = p.problem || p.blurb || '';
     $('[data-s-solution]').textContent = p.solution || '';
     $('[data-s-result]').textContent = p.result || '';
@@ -75,6 +88,12 @@
     $('[data-s-open]').hidden = !p.open;
     storyEl.classList.remove('is-in'); void storyEl.offsetWidth; storyEl.classList.add('is-in');
     if (user && history.replaceState) history.replaceState(null, '', '#' + p.id);
+    // Picked from the wall: bring the story up if it's below the fold
+    if (user) {
+      var r = storyEl.getBoundingClientRect();
+      // lift it to a third of the way down, so the wall's last row stays in view for the next pick
+      if (r.top > window.innerHeight * 0.7) window.scrollBy({ top: r.top - window.innerHeight * 0.35, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
   }
   $('[data-prev]').addEventListener('click', function () { take((cur - 1 + PROJECTS.length) % PROJECTS.length, true); });
   $('[data-next]').addEventListener('click', function () { take((cur + 1) % PROJECTS.length, true); });

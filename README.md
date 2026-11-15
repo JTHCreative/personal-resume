@@ -6,7 +6,8 @@ to its own design concept:
 1. **Design philosophy** (`philosophy.html`): a light "sketchbook" page with live demos of
    Observe, Reduce and Improve, plus the techniques I use
 2. **Design gallery** (`gallery.html`): a dark "multiviewer" (control-room monitor wall);
-   pick a project to put it on air and read the problem, solution and result
+   pick a project from the scrolling rail of monitors and page through its problem,
+   philosophy and solution in the big programme window
 3. **Design journey** (`index.html`, scroll down): the scrolling career timeline
 
 Plain HTML, CSS and JavaScript: no build step and no dependencies.
@@ -39,8 +40,10 @@ Everything the timeline shows comes from `data.js`. Add, remove or edit stops an
 `projects`, `clients`, `tools` and `cases`; the sidebar counts and slots update automatically.
 Set `photo` to an image path to replace the initials in the photo circle.
 
-Case studies with an `id` also appear in the gallery, using their `problem`, `solution`,
-`result` and `role` fields.
+Case studies with an `id` also appear in the gallery. Their `pages` list sets what the big
+window shows, in order: `problem`, `philosophy` (linked to Observe, Reduce or Improve) and
+`solution` pages, as many of each as the story needs. The format is described at the top
+of `data.js`.
 
 ## Publish with GitHub Pages
 

@@ -6,8 +6,14 @@
     - clients  → "Interfaces in production" labels
     - tools    → "Tool kit" (interface / creative / systems)
     - cases    → "Case studies" thumbnails (click to open). Cases with an `id` also appear
-                 in the Design gallery (gallery.html), which tells their full story from
-                 `problem`, `solution`, `result` and `role`.
+                 in the Design gallery (gallery.html), which tells their story as pages
+                 listed in `pages` (see "Gallery pages" below) plus `role`.
+
+  Gallery pages: each case's `pages` is a list shown in order in the gallery's big window.
+    { kind: 'problem',    title, text, quote? }       quote = optional words from an operator
+    { kind: 'philosophy', principle, title, text }    principle = 'observe' | 'reduce' | 'improve'
+    { kind: 'solution',   title, text, img? }         img = optional screenshot beside the text
+  Use as many pages of each kind as the story needs (at least one of each).
   Scrolling back past a stop puts its items back.
 
   passing (optional) = labels collected one by one between this stop and the next,
@@ -59,11 +65,18 @@ window.SITE = {
       cases: [
         { id: 'panel-builder', title: 'Routing panel builder', tag: 'Visual', img: 'assets/img/panel-builder.jpg',
           blurb: 'Lets operators create the layouts they want on the fly, turning a complicated multi-step process into a visual experience.',
-          // DRAFT gallery story: written from the blurb above, edit with the real details
+          // DRAFT gallery pages: written from the blurb above, edit with the real details
           role: 'Design & build · Cerebrum Designer',
-          problem: 'Changing a routing panel meant a multi-step configuration job that only an engineer could do. Operators were stuck with whatever layout they had been given, even when the show changed.',
-          solution: 'I turned the configuration into a visual builder. Operators pick sources and destinations and place them on the panel directly, seeing the result as they go, with no settings screens in between.',
-          result: 'Operators now create the layouts they want on the fly, without waiting for an engineer.' }
+          pages: [
+            { kind: 'problem', title: 'Layouts locked behind an engineer',
+              text: 'Changing a routing panel meant a multi-step configuration job that only an engineer could do. Operators were stuck with whatever layout they had been given, even when the show changed.' },
+            { kind: 'philosophy', principle: 'reduce', title: 'Make the job something you can see',
+              text: 'Operators never wanted “configuration”. They wanted to put a source where their hand expects it. Reduce the job to exactly that, and the settings screens can disappear.' },
+            { kind: 'solution', title: 'A visual panel builder', img: 'assets/img/panel-builder.jpg',
+              text: 'Operators pick sources and destinations and place them on the panel directly, seeing the result as they go, with no settings screens in between.' },
+            { kind: 'solution', title: 'The result',
+              text: 'Operators now create the layouts they want on the fly, without waiting for an engineer.' }
+          ] }
       ]
     },
     {
@@ -113,18 +126,34 @@ window.SITE = {
       cases: [
         { id: 'proc-control', title: 'Proc Control', tag: 'Modular', img: 'assets/img/proc-control.jpg',
           blurb: 'Designed for different formats and platforms, and built from pinnable modules so each operator can assemble their own custom dashboard.',
-          // DRAFT gallery story: written from the blurb above, edit with the real details
+          // DRAFT gallery pages: written from the blurb above, edit with the real details
           role: 'UX, UI & build',
-          problem: 'Processing control had to work across different formats and platforms, and every operator watches a different set of signals. One fixed screen could not suit them all.',
-          solution: 'I broke the interface into pinnable modules. Each operator assembles the dashboard they need from the same building blocks, and the layout adapts to the format and platform it runs on.',
-          result: 'One interface that every operator can make their own, instead of a different build for each desk.' },
+          pages: [
+            { kind: 'problem', title: 'Every desk watches something different',
+              text: 'Each operator keeps an eye on a different set of signals. A single fixed screen meant everyone scrolled past controls they never used to reach the few they needed.' },
+            { kind: 'problem', title: 'And it has to run everywhere',
+              text: 'The same control had to work across different video formats and on different platforms, from a desk panel to a laptop. Building a separate screen for each combination would never keep up.' },
+            { kind: 'philosophy', principle: 'observe', title: 'Watch how each desk really works',
+              text: 'Sitting with operators showed that nobody used the whole screen. Each person had their own handful of controls, so the interface should start from those, not from everything the system can do.' },
+            { kind: 'solution', title: 'Pinnable modules', img: 'assets/img/proc-control.jpg',
+              text: 'I broke the interface into modules that operators pin where they want them. Everyone builds the dashboard they need from the same reliable blocks, and the layout adapts to the format and platform it runs on.' },
+            { kind: 'solution', title: 'The result',
+              text: 'One interface that every operator can make their own, instead of a different build for each desk.' }
+          ] },
         { id: 'config-guide', title: 'System configuration guide', tag: 'Human-centred', img: 'assets/img/config-tool.jpg',
           blurb: 'A configuration tool that doubles as a helper, pointing the user in the right direction and offering a hand through each step.',
-          // DRAFT gallery story: written from the blurb above, edit with the real details
+          // DRAFT gallery pages: written from the blurb above, edit with the real details
           role: 'UX, UI & build',
-          problem: 'Configuring the system was a long list of settings with no sense of order. New users did not know where to start, and mistakes only showed up later, on air.',
-          solution: 'I designed the tool as a guide as well as a form. It points to the next step, explains what each setting does in plain words, and offers a hand at the points where people used to get stuck.',
-          result: 'Configuration that new users can complete on their own, with fewer mistakes reaching the live show.' }
+          pages: [
+            { kind: 'problem', title: 'A long list with no starting point',
+              text: 'Configuring the system was a long list of settings with no sense of order. New users did not know where to start, and mistakes only showed up later, on air.' },
+            { kind: 'philosophy', principle: 'improve', title: 'Fix the spots where people get stuck',
+              text: 'Supporting the tool after launch showed the same few places tripping people up, again and again. Each support call pointed at a step the interface should explain itself.' },
+            { kind: 'solution', title: 'A guide as well as a form', img: 'assets/img/config-tool.jpg',
+              text: 'The tool points to the next step, explains what each setting does in plain words, and offers a hand at the points where people used to get stuck.' },
+            { kind: 'solution', title: 'The result',
+              text: 'Configuration that new users can complete on their own, with fewer mistakes reaching the live show.' }
+          ] }
       ]
     },
     {
